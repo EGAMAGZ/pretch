@@ -1,6 +1,6 @@
 {
   "name": "@prefetch/hook",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "tasks": {
     "doc": "deno doc --html --name='Pretch' src"
   },
