@@ -1,12 +1,12 @@
 import type { Enhancer, Handler } from "@/types.ts";
 
-export function buildFetch(enhance?: Enhancer) {
-  let inner: Handler = (request: Request) => fetch(request);
+export function buildFetch(enhancer?: Enhancer) {
+  let innerFetch: Handler = (request) => fetch(request);
 
-  if (enhance) {
-    inner = enhance(inner);
+  if (enhancer) {
+    innerFetch = enhancer(innerFetch);
   }
 
   return (url: string | URL, options?: RequestInit) =>
-    Promise.resolve(inner(new Request(url, options)));
+    Promise.resolve(innerFetch(new Request(url, options)));
 }

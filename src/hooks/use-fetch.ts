@@ -5,7 +5,7 @@ import { buildFetch } from "@/util/build-fetch.ts";
 export default function useFetch<T>(
   url: string | URL,
   options?: RequestInit,
-  enhance?: Enhancer,
+  enhancer?: Enhancer,
 ): FetchResult<T> {
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
@@ -19,7 +19,7 @@ export default function useFetch<T>(
     error.value = null;
 
     try {
-      const customFetch = buildFetch(enhance);
+      const customFetch = buildFetch(enhancer);
       const response = await customFetch(currentUrl, currentOptions);
 
       if (!response.ok) {
