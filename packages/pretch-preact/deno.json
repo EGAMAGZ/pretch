@@ -10,7 +10,8 @@
     "preact": "npm:preact@^10.24.1",
     "@/": "./"
   },
-  "exports": "./mod.ts",
+  "exports": {
+  },
   "compilerOptions": {
     "lib": [
       "dom",

@@ -1,7 +1,8 @@
 {
   "name": "@pretch/core",
   "exports": {
-    ".": "./mod.ts"
+    ".": "./mod.ts",
+    "./middleware": "./middleware/mod.ts"
   },
   "imports": {
     "@/": "./"
