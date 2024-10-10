@@ -1,4 +1,4 @@
-import type { Enhancer, Handler } from "@/types.ts";
+import type { Enhancer, Handler } from "@pretch/core";
 
 export function buildFetch(enhancer?: Enhancer) {
   let innerFetch: Handler = (request) => fetch(request);

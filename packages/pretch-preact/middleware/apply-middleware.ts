@@ -1,4 +1,4 @@
-import type { Handler, Middleware } from "@/types.ts";
+import type { Handler, Middleware } from "@pretch/core";
 
 export function applyMiddleware(...middlewares: Middleware[]) {
   if (middlewares.length === 0) {
