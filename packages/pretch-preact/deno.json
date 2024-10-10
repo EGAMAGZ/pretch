@@ -11,6 +11,7 @@
     "@/": "./"
   },
   "exports": {
+    ".": "./mod.ts"
   },
   "compilerOptions": {
     "lib": [
