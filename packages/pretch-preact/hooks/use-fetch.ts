@@ -22,8 +22,8 @@ export function useFetch<T>(
       const response = await customFetch(currentUrl, currentOptions);
 
       data.value = (await response.json()) as T;
-    } catch (error) {
-      error.value = error as Error;
+    } catch (err) {
+      error.value = err as Error;
     } finally {
       loading.value = false;
     }
