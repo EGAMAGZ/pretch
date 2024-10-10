@@ -1,0 +1,39 @@
+name: Linting and type checking
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  setup-enviroment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+  check-linting:
+    needs: setup-enviroment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check linting
+        run: deno fmt --check
+
+  check-typing:
+    needs: setup-enviroment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check typing
+        run: deno check .
+
