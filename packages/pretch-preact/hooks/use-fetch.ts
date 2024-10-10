@@ -1,6 +1,5 @@
 import { useSignal, useSignalEffect } from "@preact/signals";
-import type { Enhancer, FetchResult } from "@/types.ts";
-import { buildFetch } from "@/util/build-fetch.ts";
+import { buildFetch, type Enhancer, type FetchResult } from "@pretch/core";
 
 export function useFetch<T>(
   url: string | URL,
@@ -23,8 +22,8 @@ export function useFetch<T>(
       const response = await customFetch(currentUrl, currentOptions);
 
       data.value = (await response.json()) as T;
-    } catch (error) {
-      error.value = error as Error;
+    } catch (err) {
+      error.value = err as Error;
     } finally {
       loading.value = false;
     }
