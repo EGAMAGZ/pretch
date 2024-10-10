@@ -1,3 +1,6 @@
 {
-  "name": "@pretch/core"
+  "name": "@pretch/core",
+  "exports": {
+    ".": "./mod.ts"
+  }
 }
