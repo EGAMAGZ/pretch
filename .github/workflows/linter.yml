@@ -1,7 +1,6 @@
 name: Linting and type checking
 
 on:
-  push:
   pull_request:
   workflow_dispatch:
 
