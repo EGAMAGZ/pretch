@@ -27,7 +27,7 @@ jobs:
           deno-version: v2.x
 
       - name: Check linting
-        run: deno fmt --check
+        run: deno fmt --check .
 
   check-typing:
     needs: setup-enviroment
