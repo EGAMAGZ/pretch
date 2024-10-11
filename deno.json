@@ -7,7 +7,8 @@
   "lint": {
     "rules": {
       "include": [
-        "no-console"
+        "no-console",
+	"ban-types"
       ]
     }
   }
