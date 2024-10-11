@@ -4,12 +4,28 @@
     "./packages/pretch-preact",
     "./packages/pretch-react"
   ],
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  },
   "lint": {
     "rules": {
       "include": [
         "no-console",
-	"ban-types"
+        "ban-types",
+        "camelcase",
+        "verbatim-module-syntax"
       ]
     }
-  }
+  },
+  "exclude": [
+    ".git",
+    ".vscode"
+  ]
 }
