@@ -9,18 +9,13 @@ permissions:
   contents: write
 
 jobs:
-  setup-enviroment:
+  check-linting:
     runs-on: ubuntu-latest
 
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
 
-  check-linting:
-    needs: setup-enviroment
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Set up Deno
         uses: denoland/setup-deno@v2
         with:
@@ -30,10 +25,12 @@ jobs:
         run: deno fmt --check .
 
   check-typing:
-    needs: setup-enviroment
     runs-on: ubuntu-latest
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
       - name: Set up Deno
         uses: denoland/setup-deno@v2
         with:
