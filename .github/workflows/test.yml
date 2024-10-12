@@ -1,0 +1,21 @@
+name: Run tests
+on:
+  pull_request:
+    branches: [master, development]
+  push:
+    branches: [development]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Run tests
+        run: deno test
