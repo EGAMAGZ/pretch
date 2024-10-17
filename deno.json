@@ -4,6 +4,11 @@
     "./packages/pretch-preact",
     "./packages/pretch-react"
   ],
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/expect": "jsr:@std/expect@^1.0.5",
+    "jsdom": "npm:jsdom@^25.0.1"
+  },
   "compilerOptions": {
     "lib": [
       "dom",
