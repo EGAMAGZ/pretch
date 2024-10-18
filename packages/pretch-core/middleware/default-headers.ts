@@ -1,6 +1,6 @@
 import type { Handler, Middleware } from "@/types.ts";
 
-type Strategy = "set" | "append";
+export type Strategy = "set" | "append";
 
 const mergeHeaders = (
   initialHeaders: Headers,
