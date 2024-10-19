@@ -2,6 +2,11 @@ import type { Handler, Middleware } from "@/types.ts";
 
 export type Strategy = "set" | "append";
 
+export interface DefaultHeaderOptions {
+  defaultHeaders: HeadersInit;
+  strategy?: Strategy;
+}
+
 const mergeHeaders = (
   initialHeaders: Headers,
   defaultHeaders: HeadersInit,
@@ -16,12 +21,15 @@ const mergeHeaders = (
   return mergedHeaders;
 };
 
-export function defaultHeaders(
-  headers: HeadersInit,
-  strategy: Strategy = "append",
+export function defaultHeadersMiddleware(
+  { defaultHeaders, strategy = "append" }: DefaultHeaderOptions,
 ): Middleware {
   return (request: Request, next: Handler) => {
-    const updatedHeaders = mergeHeaders(request.headers, headers, strategy);
+    const updatedHeaders = mergeHeaders(
+      request.headers,
+      defaultHeaders,
+      strategy,
+    );
     const updatedRequest = new Request(request, { headers: updatedHeaders });
 
     return next(updatedRequest);
