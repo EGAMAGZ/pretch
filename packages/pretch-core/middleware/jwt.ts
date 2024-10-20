@@ -6,7 +6,8 @@ export interface JwtMiddlewareOptions {
 }
 
 export function jwtMiddleware(
-  { token, shouldApplyToken = (_request: Request) => true }: JwtMiddlewareOptions,
+  { token, shouldApplyToken = (_request: Request) => true }:
+    JwtMiddlewareOptions,
 ): Middleware {
   return (request: Request, next: Handler) => {
     if (!shouldApplyToken(request)) return next(request);
