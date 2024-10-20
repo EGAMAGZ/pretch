@@ -25,7 +25,7 @@ Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
   });
 });
 
-Deno.test("Unsuccesful plain fetch - Build fetch", async (ctx) => {
+Deno.test("Unsuccesful plain fetch - Build fetch", async () => {
   const customFetch = buildFetch();
   const response = await customFetch(
     "https://jsonplaceholder.typicode.com/todo/1",
