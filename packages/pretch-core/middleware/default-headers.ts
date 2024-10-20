@@ -7,7 +7,6 @@ export type Strategy = "set" | "append";
 /**
  * Options for the default headers middleware.
  *
- * @typedef {Object} DefaultHeaderOptions
  * @property {HeadersInit} defaultHeaders - The default headers to add.
  * @property {Strategy} [strategy="append"] - The strategy to use when merging the headers.
  *   If "set", the default headers will overwrite any existing headers.

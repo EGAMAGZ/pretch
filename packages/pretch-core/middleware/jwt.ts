@@ -1,8 +1,18 @@
 import type { Handler, Middleware } from "@/types.ts";
 
+/**
+ * Options for the JWT middleware.
+ */
 export interface JwtMiddlewareOptions {
-  token: string;
-  shouldApplyToken?: (request: Request) => boolean;
+  /**
+   * The JWT token to add to the request.
+   */
+  readonly token: string;
+  /**
+   * A function that determines whether to add the token to the request.
+   * Defaults to a function that always returns true.
+   */
+  readonly shouldApplyToken?: (request: Request) => boolean;
 }
 
 /**
