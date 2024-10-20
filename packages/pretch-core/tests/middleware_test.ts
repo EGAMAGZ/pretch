@@ -57,7 +57,8 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
   const token = "1234567890";
   const middleware = jwtMiddleware({
     token,
-    shouldApplyToken: (request: Request) => new URL(request.url).pathname.startsWith("/api/"),
+    shouldApplyToken: (request: Request) =>
+      new URL(request.url).pathname.startsWith("/api/"),
   });
 
   const notApiRequest = new Request(
