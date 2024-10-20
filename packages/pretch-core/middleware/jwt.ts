@@ -5,6 +5,16 @@ export interface JwtMiddlewareOptions {
   shouldApplyToken?: (request: Request) => boolean;
 }
 
+/**
+ * A middleware that adds a JWT token to a request.
+ *
+ * @param {JwtMiddlewareOptions} options
+ * @param {string} options.token - The JWT token to add to the request.
+ * @param {(request: Request) => boolean} [options.shouldApplyToken] -
+ *   A function that determines whether to add the token to the request.
+ *   Defaults to a function that always returns true.
+ * @returns {Middleware} A middleware that adds the token to the request.
+ */
 export function jwtMiddleware(
   { token, shouldApplyToken = (_request: Request) => true }:
     JwtMiddlewareOptions,
