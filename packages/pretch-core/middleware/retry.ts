@@ -1,5 +1,11 @@
 import type { Handler, Middleware } from "@/types.ts";
 
+/**
+ * Options for the retry middleware.
+ *
+ * @property {number} [maxRetries=3] - The maximum number of times to retry.
+ * @property {number} [delay=100] - The delay in milliseconds between retries.
+ */
 export interface RetryMiddlewareOptions {
   maxRetries?: number;
   delay?: number;
