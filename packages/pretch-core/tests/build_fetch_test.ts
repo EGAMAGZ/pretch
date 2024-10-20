@@ -24,3 +24,13 @@ Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
     expect(body).toEqual(expectedTodo);
   });
 });
+
+Deno.test("Unsuccesful plain fetch - Build fetch", async (ctx) => {
+  const customFetch = buildFetch();
+  const response = await customFetch(
+    "https://jsonplaceholder.typicode.com/todo/1",
+  );
+
+  expect(response.ok).toEqual(false);
+  await response.body?.cancel();
+});
