@@ -244,7 +244,6 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@1",
       "jsr:@std/expect@^1.0.5",
       "npm:jsdom@^25.0.1"
     ],
