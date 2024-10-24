@@ -1,5 +1,6 @@
 import { jwtMiddleware } from "@/middleware/jwt.ts";
 import { defaultHeadersMiddleware } from "@/middleware/default-headers.ts";
+import { validateStatusMiddleware } from "@/middleware/validate-status.ts";
 import { expect } from "@std/expect/expect";
 
 Deno.test("Set default headers with set strategy - defaultHeadersMiddleware", () => {
@@ -80,4 +81,19 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
 
     return new Response();
   });
+});
+
+Deno.test("Valid status to be 200 and 404 - ValidateStatusMiddleware", () => {
+  const middleware = validateStatusMiddleware({
+    validateStatus: (status) => status === 404,
+  });
+
+  const request = new Request(
+    "https://jsonplaceholder.typicode.com/users/11",
+  );
+
+  expect(async () => {
+    const res = await middleware(request, async (r) => await fetch(r));
+    await res.body?.cancel();
+  }).not.toThrow();
 });
