@@ -1,16 +1,13 @@
+import type { Enhancer } from "@/types.ts";
 import type { Handler, Middleware } from "@/types.ts";
 
 /**
- * Apply a list of middlewares to a request.
+ * Applies multiple middleware functions to a handler.
  *
- * The order of the middlewares is important. The middlewares are called in the
- * reverse order of the list. The first middleware in the list is the last one
- * to be called.
- *
- * @param {Middleware[]} middlewares - The list of middlewares to apply.
- * @returns {Handler} A handler that applies the middlewares to the request.
+ * @param {...Middleware} middlewares - The middleware functions to apply.
+ * @returns {Enhancer} An enhancer that applies the middleware functions to a handler.
  */
-export function applyMiddleware(...middlewares: Middleware[]) {
+export function applyMiddleware(...middlewares: Middleware[]): Enhancer {
   if (middlewares.length === 0) {
     return (next: Handler) => next;
   }
