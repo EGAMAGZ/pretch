@@ -1,6 +1,6 @@
-name: Upgrade Deno workspaces packages 
+name: Upgrade Deno workspaces packages
 
-on: 
+on:
   workflow_dispatch:
 
 jobs:

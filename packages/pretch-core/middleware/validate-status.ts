@@ -1,4 +1,4 @@
-import type { Handler } from "@/types.ts";
+import type { Handler, Middleware } from "@/types.ts";
 
 /**
  * Options for the validate status middleware.
@@ -29,7 +29,7 @@ export interface ValidateStatusMiddlewareOptions {
  */
 export function validateStatusMiddleware(
   { validateStatus }: ValidateStatusMiddlewareOptions,
-) {
+): Middleware {
   return async (request: Request, next: Handler) => {
     const response = await next(request);
 

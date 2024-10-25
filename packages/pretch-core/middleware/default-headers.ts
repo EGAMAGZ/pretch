@@ -31,7 +31,7 @@ const mergeHeaders = (
   initialHeaders: Headers,
   defaultHeaders: HeadersInit,
   strategy: Strategy,
-) => {
+): Headers => {
   const mergedHeaders = new Headers(initialHeaders);
 
   new Headers(defaultHeaders).forEach((value, key) => {
