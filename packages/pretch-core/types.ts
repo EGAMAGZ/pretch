@@ -43,3 +43,12 @@ export interface Enhancer {
 export interface Middleware {
   (request: Request, next: Handler): Response | Promise<Response>;
 }
+
+/**
+ * A custom fetch function.
+ *
+ * @param {string | URL} url - The URL to fetch.
+ * @param {RequestInit} [options] - The options for the request.
+ * @returns {Promise<Response>} A promise that resolves to the response.
+ */
+export type CustomFetch = (url: string | URL, options?: RequestInit) => Promise<Response>;

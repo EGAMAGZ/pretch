@@ -1,13 +1,12 @@
-import type { Enhancer, Handler } from "@/types.ts";
+import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
 
 /**
- * Builds a fetch function that can be enhanced with middleware.
+ * Creates a custom fetch function with optional middleware enhancement.
  *
- * @param {Enhancer} [enhancer] - An enhancer that takes a fetch function and returns
- *   a new fetch function with added functionality.
- * @returns {typeof fetch} A fetch function that can be used to make requests.
+ * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
+ * @returns {CustomFetch} A custom fetch function that applies the enhancer, if provided.
  */
-export function buildFetch(enhancer?: Enhancer) {
+export function buildFetch(enhancer?: Enhancer): CustomFetch {
   let innerFetch: Handler = (request) => fetch(request);
 
   if (enhancer) {
