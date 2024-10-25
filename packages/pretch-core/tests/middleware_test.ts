@@ -3,7 +3,7 @@ import { defaultHeadersMiddleware } from "@/middleware/default-headers.ts";
 import { validateStatusMiddleware } from "@/middleware/validate-status.ts";
 import { expect } from "@std/expect/expect";
 
-Deno.test("Set default headers with set strategy - defaultHeadersMiddleware", () => {
+Deno.test("Set default headers with set strategy - DefaultHeadersMiddleware", () => {
   const middleware = defaultHeadersMiddleware({
     defaultHeaders: {
       "Content-Type": "application/json",
@@ -23,7 +23,7 @@ Deno.test("Set default headers with set strategy - defaultHeadersMiddleware", ()
   });
 });
 
-Deno.test("Set default headers with append strategy - defaultHeadersMiddleware", () => {
+Deno.test("Set default headers with append strategy - DefaultHeadersMiddleware", () => {
   const middleware = defaultHeadersMiddleware({
     defaultHeaders: {
       "Content-Type": "application/json",
@@ -83,17 +83,31 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
   });
 });
 
-Deno.test("Valid status to be 200 and 404 - ValidateStatusMiddleware", () => {
+Deno.test("Valid status to be 200 and 404 - ValidateStatusMiddleware", async (ctx) => {
   const middleware = validateStatusMiddleware({
     validateStatus: (status) => status === 404,
   });
 
-  const request = new Request(
-    "https://jsonplaceholder.typicode.com/users/11",
-  );
+  await ctx.step("Fetch existing user (returns status code 200)", async () => {
+    const request = new Request(
+      "https://jsonplaceholder.typicode.com/users/10",
+    );
 
-  expect(async () => {
-    const res = await middleware(request, async (r) => await fetch(r));
-    await res.body?.cancel();
-  }).not.toThrow();
+    const getUser = () => middleware(request, (r) => fetch(r));
+    await expect(getUser()).rejects.toThrow();
+  });
+
+  await ctx.step(
+    "Fetch not existing user (returns status code 404)",
+    async () => {
+      const request = new Request(
+        "https://jsonplaceholder.typicode.com/users/11",
+      );
+      const getUser = async () => {
+        const response = await middleware(request, (r) => fetch(r));
+        await response.body?.cancel();
+      };
+      await expect(getUser()).resolves.not.toThrow();
+    },
+  );
 });
