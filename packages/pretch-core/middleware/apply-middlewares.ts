@@ -7,7 +7,7 @@ import type { Handler, Middleware } from "@/types.ts";
  * @param {...Middleware} middlewares - The middleware functions to apply.
  * @returns {Enhancer} An enhancer that applies the middleware functions to a handler.
  */
-export function applyMiddleware(...middlewares: Middleware[]): Enhancer {
+export function applyMiddlewares(...middlewares: Middleware[]): Enhancer {
   if (middlewares.length === 0) {
     return (next: Handler) => next;
   }

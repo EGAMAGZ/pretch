@@ -24,13 +24,13 @@ export interface Handler {
 }
 
 /**
- * A function that takes a request function and returns a new request function.
+ * An enhancer function that takes a handler and returns a new handler.
  *
- * @param {Handler} request - The request function.
- * @returns {Handler} The new request function.
+ * @param {Handler} handler - The handler to enhance.
+ * @returns {Handler} The enhanced handler.
  */
 export interface Enhancer {
-  (request: Handler): Handler;
+  (handler: Handler): Handler;
 }
 
 /**

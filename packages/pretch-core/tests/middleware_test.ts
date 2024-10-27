@@ -5,6 +5,8 @@ import { expect } from "@std/expect/expect";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 import { FakeTime } from "@std/testing/time";
 import { retryMiddleware } from "@/middleware/retry.ts";
+import { applyMiddlewares } from "@/middleware/apply-middlewares.ts";
+import type { Enhancer } from "@/types.ts";
 
 Deno.test("Set default headers with set strategy - DefaultHeadersMiddleware", () => {
   const middleware = defaultHeadersMiddleware({
@@ -118,7 +120,9 @@ Deno.test("Fetch not existing user (returns status code 404) - ValidateStatusMid
 });
 
 Deno.test("Fetch user successfully with one retry - RetryMiddleware", async () => {
-  const fetchSpy = spy(fetch);
+  const fetchSpy = spy((_request: Request) =>
+    new Response("", { status: 200 })
+  );
 
   const middleware = retryMiddleware({
     maxRetries: 2,
@@ -141,7 +145,7 @@ Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async 
 
   const middleware = retryMiddleware({
     maxRetries: 2,
-    delay: 1_000
+    delay: 1_000,
   });
 
   const request = new Request("https://jsonplaceholder.typicode.com/users/1");
@@ -154,4 +158,35 @@ Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async 
   expect(middlewarePromise).rejects.toThrow();
 
   assertSpyCalls(fetchSpy, 2);
+});
+
+Deno.test("Chaining multiple middlewares - ApplyMiddlewares", async () => {
+  const enhancer: Enhancer = applyMiddlewares(
+    defaultHeadersMiddleware({
+      defaultHeaders: {
+        "Content-Type": "application/json",
+      },
+      strategy: "append",
+    }),
+    jwtMiddleware({
+      token: "XXXXXXXXXXXXXXXX",
+    }),
+    validateStatusMiddleware({
+      validateStatus: (status) => status === 404,
+    }),
+    retryMiddleware({
+      delay: 1_000,
+      maxRetries: 2,
+    }),
+  );
+
+  const request = new Request("https://jsonplaceholder.typicode.com/users/1");
+
+  const inner = enhancer((req: Request) => {
+    expect(req.headers.has("Authorization")).toBe(true);
+    expect(req.headers.get("content-type")).toBe("application/json");
+    return new Response("", { status: 200 });
+  });
+
+  await expect(inner(request)).rejects.toThrow();
 });
