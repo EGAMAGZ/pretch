@@ -30,12 +30,14 @@ export function retryMiddleware(
     while (true) {
       attempts++;
       try {
-        return await next(request);
+        return await next(request.clone());
       } catch (error) {
-        if (attempts >= maxRetries) {
+        if (attempts < maxRetries) {
+          await wait(delay);
+          continue;
+        } else {
           throw error;
         }
-        await wait(delay);
       }
     }
   };

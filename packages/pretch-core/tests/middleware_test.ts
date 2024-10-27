@@ -2,6 +2,9 @@ import { jwtMiddleware } from "@/middleware/jwt.ts";
 import { defaultHeadersMiddleware } from "@/middleware/default-headers.ts";
 import { validateStatusMiddleware } from "@/middleware/validate-status.ts";
 import { expect } from "@std/expect/expect";
+import { assertSpyCalls, spy } from "@std/testing/mock";
+import { FakeTime } from "@std/testing/time";
+import { retryMiddleware } from "@/middleware/retry.ts";
 
 Deno.test("Set default headers with set strategy - DefaultHeadersMiddleware", () => {
   const middleware = defaultHeadersMiddleware({
@@ -83,31 +86,72 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
   });
 });
 
-Deno.test("Valid status to be 200 and 404 - ValidateStatusMiddleware", async (ctx) => {
+Deno.test("Fetch existing user (returns status code 200) - ValidateStatusMiddleware", async () => {
   const middleware = validateStatusMiddleware({
     validateStatus: (status) => status === 404,
   });
 
-  await ctx.step("Fetch existing user (returns status code 200)", async () => {
-    const request = new Request(
-      "https://jsonplaceholder.typicode.com/users/10",
-    );
+  const request = new Request(
+    "https://jsonplaceholder.typicode.com/users/10",
+  );
 
-    const getUser = () => middleware(request, (r) => fetch(r));
-    await expect(getUser()).rejects.toThrow();
+  const getUser = () => middleware(request, (r) => fetch(r));
+
+  await expect(getUser()).rejects.toThrow();
+});
+
+Deno.test("Fetch not existing user (returns status code 404) - ValidateStatusMiddleware", async () => {
+  const middleware = validateStatusMiddleware({
+    validateStatus: (status) => status === 404,
   });
 
-  await ctx.step(
-    "Fetch not existing user (returns status code 404)",
-    async () => {
-      const request = new Request(
-        "https://jsonplaceholder.typicode.com/users/11",
-      );
-      const getUser = async () => {
-        const response = await middleware(request, (r) => fetch(r));
-        await response.body?.cancel();
-      };
-      await expect(getUser()).resolves.not.toThrow();
-    },
+  const request = new Request(
+    "https://jsonplaceholder.typicode.com/users/11",
   );
+
+  const getUser = async () => {
+    const response = await middleware(request, (r) => fetch(r));
+    await response.body?.cancel();
+  };
+
+  await expect(getUser()).resolves.not.toThrow();
+});
+
+Deno.test("Fetch user successfully with one retry - RetryMiddleware", async () => {
+  const fetchSpy = spy(fetch);
+
+  const middleware = retryMiddleware({
+    maxRetries: 2,
+    delay: 1_000,
+  });
+
+  const request = new Request("https://jsonplaceholder.typicode.com/users/1");
+
+  const response = await middleware(request, (r) => fetchSpy(r));
+  await response.body?.cancel();
+
+  assertSpyCalls(fetchSpy, 1); // FIXME: Find a way to use expect instead of assert
+});
+
+Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async () => {
+  using time = new FakeTime();
+  const fetchSpy = spy((_request: Request) => {
+    throw new Error("Some error while fetching");
+  });
+
+  const middleware = retryMiddleware({
+    maxRetries: 2,
+    delay: 1_000
+  });
+
+  const request = new Request("https://jsonplaceholder.typicode.com/users/1");
+  const middlewarePromise = middleware(
+    request,
+    fetchSpy,
+  );
+
+  await time.tickAsync(2_000);
+  expect(middlewarePromise).rejects.toThrow();
+
+  assertSpyCalls(fetchSpy, 2);
 });

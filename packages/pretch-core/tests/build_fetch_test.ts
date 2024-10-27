@@ -9,7 +9,9 @@ Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
     "https://jsonplaceholder.typicode.com/todos/1",
   );
 
-  expect(response.ok).toEqual(true);
+  await ctx.step("Code status must be ok", () => {
+    expect(response.ok).toEqual(true);
+  });
 
   await ctx.step("Validate Json response", async () => {
     const body = await response.json() as Todo;
