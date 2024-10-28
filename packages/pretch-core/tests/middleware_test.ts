@@ -8,7 +8,7 @@ import { retryMiddleware } from "@/middleware/retry.ts";
 import { applyMiddlewares } from "@/middleware/apply-middlewares.ts";
 import type { Enhancer } from "@/types.ts";
 
-Deno.test("Set default headers with set strategy - DefaultHeadersMiddleware", () => {
+Deno.test("DefaultHeadersMiddleware - Apply headers with 'set' strategy", () => {
   const middleware = defaultHeadersMiddleware({
     defaultHeaders: {
       "Content-Type": "application/json",
@@ -28,7 +28,7 @@ Deno.test("Set default headers with set strategy - DefaultHeadersMiddleware", ()
   });
 });
 
-Deno.test("Set default headers with append strategy - DefaultHeadersMiddleware", () => {
+Deno.test("DefaultHeadersMiddleware - Apply headers with 'append' strategy", () => {
   const middleware = defaultHeadersMiddleware({
     defaultHeaders: {
       "Content-Type": "application/json",
@@ -44,7 +44,7 @@ Deno.test("Set default headers with append strategy - DefaultHeadersMiddleware",
   });
 });
 
-Deno.test("Add token to all urls - JwtMiddleware", () => {
+Deno.test("JwtMiddleware - Add token to all requests", () => {
   const token = "1234567890";
   const middleware = jwtMiddleware({
     token,
@@ -59,7 +59,7 @@ Deno.test("Add token to all urls - JwtMiddleware", () => {
   });
 });
 
-Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
+Deno.test("JwtMiddleware - Conditionally add token for '/api/' paths", () => {
   const token = "1234567890";
   const middleware = jwtMiddleware({
     token,
@@ -88,7 +88,7 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
   });
 });
 
-Deno.test("Fetch existing user (returns status code 200) - ValidateStatusMiddleware", async () => {
+Deno.test("ValidateStatusMiddleware - Throw error for status 200", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response("", { status: 200 })
   );
@@ -105,7 +105,7 @@ Deno.test("Fetch existing user (returns status code 200) - ValidateStatusMiddlew
   await expect(getUser()).rejects.toThrow();
 });
 
-Deno.test("Fetch not existing user (returns status code 404) - ValidateStatusMiddleware", async () => {
+Deno.test("ValidateStatusMiddleware - No error for status 404", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response("", { status: 404 })
   );
@@ -125,7 +125,7 @@ Deno.test("Fetch not existing user (returns status code 404) - ValidateStatusMid
   await expect(getUser()).resolves.not.toThrow();
 });
 
-Deno.test("Fetch user successfully with one retry - RetryMiddleware", async () => {
+Deno.test("RetryMiddleware - Fetch succesfully with one retry", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response("", { status: 200 })
   );
@@ -143,7 +143,7 @@ Deno.test("Fetch user successfully with one retry - RetryMiddleware", async () =
   assertSpyCalls(fetchSpy, 1); // FIXME: Find a way to use expect instead of assert
 });
 
-Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async () => {
+Deno.test("RetryMiddleware - Fail to fetch after two retries", async () => {
   using time = new FakeTime();
   const fetchSpy = spy((_request: Request) => {
     throw new Error("Some error while fetching");
@@ -166,7 +166,7 @@ Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async 
   assertSpyCalls(fetchSpy, 2);
 });
 
-Deno.test("Apply multiple middlewares to a fetch - ApplyMiddlewares", async () => {
+Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => {
   const enhancer: Enhancer = applyMiddlewares(
     defaultHeadersMiddleware({
       defaultHeaders: {

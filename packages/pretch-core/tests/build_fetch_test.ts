@@ -4,7 +4,7 @@ import { stub } from "@std/testing/mock";
 
 type Todo = { userId: number; id: number; title: string; completed: boolean };
 
-Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
+Deno.test("Build fetch - Sucessful fetch with async data", async (ctx) => {
   const expectedTodo: Todo = {
     userId: 1,
     id: 1,
@@ -22,7 +22,7 @@ Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
     "https://example.com",
   );
 
-  await ctx.step("Status should indicate success", () => {
+  await ctx.step("Status code should indicate success", () => {
     expect(response.ok).toEqual(true);
   });
 
@@ -32,7 +32,7 @@ Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
   });
 });
 
-Deno.test("Unsuccesful plain fetch - Build fetch", async () => {
+Deno.test("Build fetch - Unsuccessful fetch with async data", async () => {
   using _ = stub(
     globalThis,
     "fetch",
