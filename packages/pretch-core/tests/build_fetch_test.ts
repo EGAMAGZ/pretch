@@ -53,15 +53,15 @@ Deno.test("Build fetch - Unsuccessful fetch with async data", async () => {
   await response.body?.cancel();
 });
 
-Deno.test("Build fetch - Successfully fetch applying middlewares", async () => {
+Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
   let capturedHeaders = new Headers();
   using _ = stub(
     globalThis,
     "fetch",
     // deno-lint-ignore require-await
     async (_input, init) => {
-	    const request = new Request(_input, init);
-	    capturedHeaders = request.headers;
+      const request = new Request(_input, init);
+      capturedHeaders = request.headers;
       return new Response(null, { status: 404 });
     },
   );
@@ -78,6 +78,8 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", async () => {
     }),
     jwtMiddleware({
       token: "1234567890",
+      shouldApplyToken: (request) =>
+        new URL(request.url).pathname.startsWith("/api/"),
     }),
   ));
 
@@ -85,8 +87,8 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", async () => {
     method: "GET",
   });
 
-  expect(capturedHeaders.get("Authorization")).toBe("Bearer 1234567890")
-  expect(capturedHeaders.get("Content-type")).toBe("application/json")
+  expect(capturedHeaders.get("Authorization")).toBe("Bearer 1234567890");
+  expect(capturedHeaders.get("Content-type")).toBe("application/json");
 
   expect(response).resolves.not.toThrow();
 });
