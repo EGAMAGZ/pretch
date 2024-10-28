@@ -175,7 +175,7 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
       strategy: "append",
     }),
     jwtMiddleware({
-      token: "XXXXXXXXXXXXXXXX",
+      token: "1234567890",
     }),
     validateStatusMiddleware({
       validateStatus: (status) => status === 404,
@@ -189,7 +189,7 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
   const request = new Request("http://example.com");
 
   const inner = enhancer((req: Request) => {
-    expect(req.headers.has("Authorization")).toBe(true);
+    expect(req.headers.has("Authorization")).toEqual(`Bearer 1234567890`);
     expect(req.headers.get("content-type")).toBe("application/json");
     return new Response("", { status: 200 });
   });
