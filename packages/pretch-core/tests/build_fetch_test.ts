@@ -1,37 +1,46 @@
 import { buildFetch } from "@/build-fetch.ts";
 import { expect } from "@std/expect";
+import { stub } from "@std/testing/mock";
 
 type Todo = { userId: number; id: number; title: string; completed: boolean };
 
 Deno.test("Successful plain fetch - Build fetch", async (ctx) => {
-  const customFetch = buildFetch();
-  const response = await customFetch(
-    "https://jsonplaceholder.typicode.com/todos/1",
+  const expectedTodo: Todo = {
+    userId: 1,
+    id: 1,
+    title: "delectus aut autem",
+    completed: false,
+  };
+  using _ = stub(
+    globalThis,
+    "fetch",
+    async () => new Response(JSON.stringify(expectedTodo)),
   );
 
-  await ctx.step("Code status must be ok", () => {
+  const customFetch = buildFetch();
+  const response = await customFetch(
+    "https://example.com",
+  );
+
+  await ctx.step("Status should indicate success", () => {
     expect(response.ok).toEqual(true);
   });
 
-  await ctx.step("Validate Json response", async () => {
+  await ctx.step("Response JSON should match expected Todo", async () => {
     const body = await response.json() as Todo;
-
-    const expectedTodo: Todo = {
-      userId: 1,
-      id: 1,
-      title: "delectus aut autem",
-      completed: false,
-    };
-
     expect(body).toEqual(expectedTodo);
   });
 });
 
 Deno.test("Unsuccesful plain fetch - Build fetch", async () => {
-  const customFetch = buildFetch();
-  const response = await customFetch(
-    "https://jsonplaceholder.typicode.com/todo/1",
+  using _ = stub(
+    globalThis,
+    "fetch",
+    async () => new Response(null, { status: 404 }),
   );
+
+  const customFetch = buildFetch();
+  const response = await customFetch("https://example.com");
 
   expect(response.ok).toEqual(false);
   await response.body?.cancel();
