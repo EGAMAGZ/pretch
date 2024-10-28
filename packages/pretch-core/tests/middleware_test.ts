@@ -16,7 +16,7 @@ Deno.test("Set default headers with set strategy - DefaultHeadersMiddleware", ()
     strategy: "set",
   });
 
-  const request = new Request("https://jsonplaceholder.typicode.com/users/10", {
+  const request = new Request("https://example.com", {
     headers: {
       "Content-Type": "text/html",
     },
@@ -36,7 +36,7 @@ Deno.test("Set default headers with append strategy - DefaultHeadersMiddleware",
     strategy: "append",
   });
 
-  const request = new Request("https://jsonplaceholder.typicode.com/users/10");
+  const request = new Request("https://example.com");
 
   middleware(request, (request: Request) => {
     expect(request.headers.get("Content-Type")).toBe("application/json");
@@ -50,7 +50,7 @@ Deno.test("Add token to all urls - JwtMiddleware", () => {
     token,
   });
 
-  const request = new Request("https://jsonplaceholder.typicode.com/users/10");
+  const request = new Request("http://example.com");
 
   middleware(request, (request: Request) => {
     expect(request.headers.get("Authorization")).toBe(`Bearer ${token}`);
@@ -68,7 +68,7 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
   });
 
   const notApiRequest = new Request(
-    "https://jsonplaceholder.typicode.com/users/10",
+    "https://example.com",
   );
 
   middleware(notApiRequest, (request: Request) => {
@@ -78,7 +78,7 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
   });
 
   const apiRequest = new Request(
-    "https://jsonplaceholder.typicode.com/api/users/10",
+    "https://example.com/api/example",
   );
 
   middleware(apiRequest, (request: Request) => {
@@ -89,30 +89,36 @@ Deno.test("Add token to urls that starts with '/api/' - JwtMiddleware", () => {
 });
 
 Deno.test("Fetch existing user (returns status code 200) - ValidateStatusMiddleware", async () => {
+  const fetchSpy = spy((_request: Request) =>
+    new Response("", { status: 200 })
+  );
   const middleware = validateStatusMiddleware({
     validateStatus: (status) => status === 404,
   });
 
   const request = new Request(
-    "https://jsonplaceholder.typicode.com/users/10",
+    "https://example.com",
   );
 
-  const getUser = () => middleware(request, (r) => fetch(r));
+  const getUser = () => middleware(request, (r) => fetchSpy(r));
 
   await expect(getUser()).rejects.toThrow();
 });
 
 Deno.test("Fetch not existing user (returns status code 404) - ValidateStatusMiddleware", async () => {
+  const fetchSpy = spy((_request: Request) =>
+    new Response("", { status: 404 })
+  );
   const middleware = validateStatusMiddleware({
     validateStatus: (status) => status === 404,
   });
 
   const request = new Request(
-    "https://jsonplaceholder.typicode.com/users/11",
+    "https://example.com",
   );
 
   const getUser = async () => {
-    const response = await middleware(request, (r) => fetch(r));
+    const response = await middleware(request, (r) => fetchSpy(r));
     await response.body?.cancel();
   };
 
@@ -129,7 +135,7 @@ Deno.test("Fetch user successfully with one retry - RetryMiddleware", async () =
     delay: 1_000,
   });
 
-  const request = new Request("https://jsonplaceholder.typicode.com/users/1");
+  const request = new Request("http://example.com");
 
   const response = await middleware(request, (r) => fetchSpy(r));
   await response.body?.cancel();
@@ -148,7 +154,7 @@ Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async 
     delay: 1_000,
   });
 
-  const request = new Request("https://jsonplaceholder.typicode.com/users/1");
+  const request = new Request("http://example.com");
   const middlewarePromise = middleware(
     request,
     fetchSpy,
@@ -160,7 +166,7 @@ Deno.test("Fetch user unsuccessfully with two retries - RetryMiddleware", async 
   assertSpyCalls(fetchSpy, 2);
 });
 
-Deno.test("Chaining multiple middlewares - ApplyMiddlewares", async () => {
+Deno.test("Apply multiple middlewares to a fetch - ApplyMiddlewares", async () => {
   const enhancer: Enhancer = applyMiddlewares(
     defaultHeadersMiddleware({
       defaultHeaders: {
@@ -180,7 +186,7 @@ Deno.test("Chaining multiple middlewares - ApplyMiddlewares", async () => {
     }),
   );
 
-  const request = new Request("https://jsonplaceholder.typicode.com/users/1");
+  const request = new Request("http://example.com");
 
   const inner = enhancer((req: Request) => {
     expect(req.headers.has("Authorization")).toBe(true);
