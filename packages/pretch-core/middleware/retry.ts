@@ -22,6 +22,9 @@ export interface RetryMiddlewareOptions {
 export function retryMiddleware(
   { maxRetries = 3, delay = 100 }: RetryMiddlewareOptions,
 ): Middleware {
+  if (delay < 1) throw new Error("Delay must be greater than 0");
+  if (maxRetries < 1) throw new Error("Maximum number of retries must be greater than 0");
+
   const wait = (milisenconds: number) =>
     new Promise((resolve) => setTimeout(resolve, milisenconds));
 
