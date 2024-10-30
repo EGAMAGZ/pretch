@@ -3,6 +3,22 @@ import { assertSpyCalls, spy } from "@std/testing/mock";
 import { FakeTime } from "@std/testing/time";
 import { retryMiddleware } from "@/middleware/retry.ts";
 
+Deno.test("RetryMiddleware - Throw error when maxRetries is lower than 1", () => {
+  expect(() => {
+    retryMiddleware({
+      maxRetries: 0,
+    });
+  }).toThrow(Error);
+});
+
+Deno.test("RetryMiddleware - Throw error when delay is lower than 1", () => {
+  expect(() => {
+    retryMiddleware({
+      delay: 0,
+    });
+  }).toThrow(Error);
+});
+
 Deno.test("RetryMiddleware - Fetch succesfully with one retry", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response("", { status: 200 })
@@ -43,4 +59,3 @@ Deno.test("RetryMiddleware - Fail to fetch after two retries", async () => {
 
   assertSpyCalls(fetchSpy, 2);
 });
-
