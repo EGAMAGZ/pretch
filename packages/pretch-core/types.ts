@@ -36,6 +36,23 @@ export interface Enhancer {
 /**
  * A middleware function.
  *
+ * @example Examples of custom middleware definition
+ * ```ts
+ * import { Middleware, Handler } from "@pretch/core";
+ *
+ * const logErrorMiddleware: Middleware = (request: Request, next: Handler) => {
+ * 	// ...
+ * 	return next(request);
+ * }
+ *
+ * function asyncMiddleware(): Middleware {
+ * 	return async (request: Request, next: Handler) => {
+ * 		// ...
+ * 		return await next(request);
+ * 	}
+ * }
+ * ```
+ *
  * @param {Request} request - The request.
  * @param {Handler} next - The next handler in the chain.
  * @returns {Response | Promise<Response>} The response.

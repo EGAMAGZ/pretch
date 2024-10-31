@@ -4,6 +4,7 @@ import type { Handler, Middleware } from "@/types.ts";
  * A strategy for merging the default headers with the existing headers.
  */
 export type Strategy = "set" | "append";
+
 /**
  * Options for the default headers middleware.
  *
@@ -43,6 +44,23 @@ const mergeHeaders = (
 
 /**
  * A middleware that adds default headers to the given request.
+ *
+ * @example Usage
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { applyMiddlewares, defaultHeadersMiddleware} from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ * 	applyMiddlewares(
+ * 		defaultHeadersMiddleware({
+ * 			defaultHeaders: {
+ *         			"Content-Type": "application/json; charset=UTF-8",
+ * 			},
+ * 			strategy: "set", // Optional, by default the headers appended
+ * 		}),
+ * 	)
+ * );
+ * ```
  *
  * @param {DefaultHeaderOptions} options
  * @param {HeadersInit} options.defaultHeaders - The default headers to add.

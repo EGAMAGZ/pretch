@@ -1,2 +1,2 @@
 export * from "@/types.ts";
-export { buildFetch } from "@/build-fetch.ts";
+export { buildFetch } from "@/build_fetch.ts";

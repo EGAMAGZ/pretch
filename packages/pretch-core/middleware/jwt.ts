@@ -18,6 +18,21 @@ export interface JwtMiddlewareOptions {
 /**
  * A middleware that adds a JWT token to a request.
  *
+ * @example Usage
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { applyMiddlewares, jwtMiddleware} from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ * 	applyMiddlewares(
+ * 		jwtMiddleware({
+ * 			token: "1234567890",
+ * 			shouldApplyToken: (request: Request) =>
+ *      			new URL(request.url).pathname.startsWith("/api/"),
+ * 		}),
+ * 	)
+ * );
+ * ```
  * @param {JwtMiddlewareOptions} options
  * @param {string} options.token - The JWT token to add to the request.
  * @param {(request: Request) => boolean} [options.shouldApplyToken] -

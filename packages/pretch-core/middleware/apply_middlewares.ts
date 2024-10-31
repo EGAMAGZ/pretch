@@ -4,6 +4,22 @@ import type { Handler, Middleware } from "@/types.ts";
 /**
  * Applies multiple middleware functions to a handler.
  *
+ * @example Usage of `applyMiddlewares` to enhance the fetch built
+ * ```ts
+ * import { buildFetch, Middleware, Handler } from "@pretch/core"
+ * import { applyMiddlewares, retryMiddleware } from "@pretch/core/middleware"
+ *
+ * const customMiddleware: Middleware = (request: Request, next: Handler) => next(request);
+ *
+ * const customFetch = buildFetch(
+ *   applyMiddlewares(
+ *     retryMiddleware(),
+ *     customMiddleware
+ * 	// Built-in or custom middlewares
+ *   ),
+ * );
+ * ```
+ *
  * @param {...Middleware} middlewares - The middleware functions to apply.
  * @returns {Enhancer} An enhancer that applies the middleware functions to a handler.
  */

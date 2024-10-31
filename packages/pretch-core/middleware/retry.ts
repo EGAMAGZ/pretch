@@ -14,13 +14,26 @@ export interface RetryMiddlewareOptions {
 /**
  * A middleware that retries a request if it fails.
  *
- * @param {RetryMiddlewareOptions} [options]
- * @param {number} [options.maxRetries=3] - The maximum number of times to retry.
- * @param {number} [options.delay=100] - The delay in milliseconds between retries.
+ * @example Usage
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { applyMiddlewares, retryMiddleware} from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ * 	applyMiddlewares(
+ * 		retryMiddleware({
+ * 			maxRetries: 2,
+ * 			delay: 1_500,
+ * 		}),
+ * 	)
+ * );
+ * ```
+ *
+ * @param {RetryMiddlewareOptions} [options] - The options for the retry middleware.
  * @returns {Middleware} A middleware that retries the request.
  */
 export function retryMiddleware(
-  { maxRetries = 3, delay = 100 }: RetryMiddlewareOptions,
+  { maxRetries = 3, delay = 100 }: RetryMiddlewareOptions = {},
 ): Middleware {
   if (delay < 1) throw new Error("Delay must be greater than 0");
 
