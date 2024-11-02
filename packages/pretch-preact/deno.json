@@ -1,5 +1,5 @@
 {
-  "name": "@prefetch/preact",
+  "name": "@pretch/preact",
   "version": "0.1.2",
   "tasks": {
     "doc": "deno doc --html --name='Pretch' src"

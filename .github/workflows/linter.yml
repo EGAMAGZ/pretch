@@ -36,4 +36,4 @@ jobs:
           deno-version: v2.x
 
       - name: Check typing
-        run: deno check .
+        run: deno check --doc .
