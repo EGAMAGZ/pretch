@@ -49,6 +49,8 @@
  *
  * ## Built-in middlewares
  *
+ * Pretch provides a built-in enhancer to apply middlewares on each request
+ *
  * ### Validate Status Middleware
  * Creates a middleware that validates the response status.
  * ```ts
