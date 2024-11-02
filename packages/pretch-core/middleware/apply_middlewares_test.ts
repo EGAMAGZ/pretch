@@ -8,18 +8,20 @@ import { validateStatusMiddleware } from "@/middleware/validate_status.ts";
 
 Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => {
   const enhancer: Enhancer = applyMiddlewares(
-    defaultHeadersMiddleware({
-      defaultHeaders: {
+    defaultHeadersMiddleware(
+      {
         "Content-Type": "application/json",
       },
-      strategy: "append",
-    }),
-    jwtMiddleware({
-      token: "1234567890",
-    }),
-    validateStatusMiddleware({
-      validateStatus: (status) => status === 404,
-    }),
+      {
+        strategy: "append",
+      },
+    ),
+    jwtMiddleware(
+      "1234567890",
+    ),
+    validateStatusMiddleware(
+      (status) => status === 404,
+    ),
     retryMiddleware({
       delay: 1_000,
       maxRetries: 2,

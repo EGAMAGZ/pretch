@@ -3,40 +3,54 @@ import type { Handler, Middleware } from "@/types.ts";
 /**
  * Options for the validate status middleware.
  *
- * @property {(status: number) => boolean} validateStatus - A function that
- *   takes a status code and returns a boolean indicating whether the status
- *   is valid. If the status is not valid, the middleware will throw an error.
+ * @property {(status: number, request: Request, response: Response) => Error} [errorFactory] -
+ *   A factory function to create an error when the status is invalid.
+ * @property {boolean} [shouldCancelBody] -
+ *   Whether to cancel the response body when the status is invalid before throwing error.
  */
 export interface ValidateStatusMiddlewareOptions {
-  /**
-   * A function that takes a status code and returns a boolean indicating
-   * whether the status is valid.
-   *
-   * @param {number} status - The status code.
-   * @returns {boolean} Whether the status is valid.
-   */
-  validateStatus: (status: number) => boolean;
+  errorFactory?: (
+    status: number,
+    request: Request,
+    response: Response,
+  ) => Error;
+  shouldCancelBody?: boolean;
 }
 
 /**
- * A middleware that validates the status of a response.
+ * Creates a middleware that validates the response status.
  *
- * @param {ValidateStatusMiddlewareOptions} options
- * @param {(status: number) => boolean} options.validateStatus - A function that
- *   takes a status code and returns a boolean indicating whether the status
- *   is valid. If the status is not valid, the middleware will throw an error.
- * @returns {Middleware} A middleware that validates the status of a response.
+ * @param {(status: number, request: Request, response: Response) => boolean} validateStatus -
+ *   A function to validate the response status.
+ * @param {ValidateStatusMiddlewareOptions} [options] - Options for the middleware.
+ * @param {(status: number, request: Request, response: Response) => Error} [options.errorFactory] -
+ *   A factory function to create an error when the status is invalid. Defaults to a function that creates
+ *   an error with the response status.
+ * @param {boolean} [options.shouldCancelBody] -
+ *   Whether to cancel the response body when the status is invalid.
+ * @returns {Middleware} A middleware that validates the response status.
  */
 export function validateStatusMiddleware(
-  { validateStatus }: ValidateStatusMiddlewareOptions,
+  validateStatus: (
+    status: number,
+    request: Request,
+    response: Response,
+  ) => boolean,
+  {
+    errorFactory = (_status: number, _request: Request, response: Response) =>
+      new Error(`Request failed with status ${response.status}`),
+    shouldCancelBody,
+  }: ValidateStatusMiddlewareOptions = {},
 ): Middleware {
   return async (request: Request, next: Handler) => {
     const response = await next(request);
 
-    const isValidStatus = validateStatus(response.status);
+    const isValidStatus = validateStatus(response.status, request, response);
+
     if (!isValidStatus) {
-      await response.body?.cancel();
-      throw new Error(`Request failed with status ${response.status}`);
+      if (shouldCancelBody) await response.body?.cancel();
+
+      throw errorFactory(response.status, request, response);
     }
     return response;
   };

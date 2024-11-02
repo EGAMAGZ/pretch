@@ -4,11 +4,11 @@ import { validateStatusMiddleware } from "@/middleware/validate_status.ts";
 
 Deno.test("ValidateStatusMiddleware - Throw error for status 200", async () => {
   const fetchSpy = spy((_request: Request) =>
-    new Response("", { status: 200 })
+    new Response(null, { status: 200 })
   );
-  const middleware = validateStatusMiddleware({
-    validateStatus: (status) => status === 404,
-  });
+  const middleware = validateStatusMiddleware(
+    (status) => status === 404,
+  );
 
   const request = new Request(
     "https://example.com",
@@ -21,11 +21,12 @@ Deno.test("ValidateStatusMiddleware - Throw error for status 200", async () => {
 
 Deno.test("ValidateStatusMiddleware - No error for status 404", async () => {
   const fetchSpy = spy((_request: Request) =>
-    new Response("", { status: 404 })
+    new Response(null, { status: 404 })
   );
-  const middleware = validateStatusMiddleware({
-    validateStatus: (status) => status === 404,
-  });
+
+  const middleware = validateStatusMiddleware(
+    (status) => status === 404,
+  );
 
   const request = new Request(
     "https://example.com",
@@ -37,4 +38,36 @@ Deno.test("ValidateStatusMiddleware - No error for status 404", async () => {
   };
 
   await expect(getUser()).resolves.not.toThrow();
+});
+
+Deno.test("ValidateStatusMiddleware - Throw custom error with dumped body", async () => {
+  const errorMessage = "Custom error message";
+
+  let capturedResponse: unknown;
+
+  const fetchSpy = spy((_request: Request) =>
+    new Response(null, { status: 404 })
+  );
+
+  const middleware = validateStatusMiddleware(
+    (status) => 200 <= status && status <= 399,
+    {
+      errorFactory: (_status, _request, response) => {
+        capturedResponse = response.body;
+        return new Error(errorMessage);
+      },
+      shouldCancelBody: true,
+    },
+  );
+
+  const request = new Request(
+    "https://example.com",
+  );
+
+  const getUser = async () => {
+    await middleware(request, (r) => fetchSpy(r));
+  };
+
+  await expect(getUser()).rejects.toThrow(errorMessage);
+  expect(capturedResponse).toBeNull();
 });

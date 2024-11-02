@@ -67,20 +67,24 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
   );
 
   const customFetch = buildFetch(applyMiddlewares(
-    validateStatusMiddleware({
-      validateStatus: (status) => status === 404,
-    }),
-    defaultHeadersMiddleware({
-      defaultHeaders: {
+    validateStatusMiddleware(
+      (status) => status === 404,
+    ),
+    defaultHeadersMiddleware(
+      {
         "Content-Type": "application/json",
       },
-      strategy: "append",
-    }),
-    jwtMiddleware({
-      token: "1234567890",
-      shouldApplyToken: (request) =>
-        new URL(request.url).pathname.startsWith("/api/"),
-    }),
+      {
+        strategy: "append",
+      },
+    ),
+    jwtMiddleware(
+      "1234567890",
+      {
+        shouldApplyToken: (request) =>
+          new URL(request.url).pathname.startsWith("/api/"),
+      },
+    ),
   ));
 
   const response = customFetch("https://example.com/api/user/11", {

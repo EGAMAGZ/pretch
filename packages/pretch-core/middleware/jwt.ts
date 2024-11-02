@@ -5,10 +5,6 @@ import type { Handler, Middleware } from "@/types.ts";
  */
 export interface JwtMiddlewareOptions {
   /**
-   * The JWT token to add to the request.
-   */
-  readonly token: string;
-  /**
    * A function that determines whether to add the token to the request.
    * Defaults to a function that always returns true.
    */
@@ -25,24 +21,26 @@ export interface JwtMiddlewareOptions {
  *
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
- * 		jwtMiddleware({
- * 			token: "1234567890",
- * 			shouldApplyToken: (request: Request) =>
- *      			new URL(request.url).pathname.startsWith("/api/"),
- * 		}),
+ * 		jwtMiddleware(
+ * 			"1234567890",
+ * 			{
+ * 				shouldApplyToken: (request: Request) =>
+ *      				new URL(request.url).pathname.startsWith("/api/"),
+ * 			}
+ * 		),
  * 	)
  * );
  * ```
+ * @param {string} token - The JWT token to add to the request.
  * @param {JwtMiddlewareOptions} options
- * @param {string} options.token - The JWT token to add to the request.
  * @param {(request: Request) => boolean} [options.shouldApplyToken] -
  *   A function that determines whether to add the token to the request.
  *   Defaults to a function that always returns true.
  * @returns {Middleware} A middleware that adds the token to the request.
  */
 export function jwtMiddleware(
-  { token, shouldApplyToken = (_request: Request) => true }:
-    JwtMiddlewareOptions,
+  token: string,
+  { shouldApplyToken = (_request: Request) => true }: JwtMiddlewareOptions = {},
 ): Middleware {
   return (request: Request, next: Handler) => {
     if (!shouldApplyToken(request)) return next(request);

@@ -20,9 +20,9 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  * const customFetch = buildFetch(
  *   applyMiddlewares(
  *     defaultHeadersMiddleware({
- *       defaultHeaders: {
  *         "Content-Type": "application/json; charset=UTF-8",
  *       },
+ *      {
  *       strategy: "append",
  *     }),
  *   ),

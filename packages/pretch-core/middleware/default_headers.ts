@@ -8,13 +8,11 @@ export type Strategy = "set" | "append";
 /**
  * Options for the default headers middleware.
  *
- * @property {HeadersInit} defaultHeaders - The default headers to add.
  * @property {Strategy} [strategy="append"] - The strategy to use when merging the headers.
  *   If "set", the default headers will overwrite any existing headers.
  *   If "append", the default headers will be appended to any existing headers.
  */
 export interface DefaultHeaderOptions {
-  defaultHeaders: HeadersInit;
   strategy?: Strategy;
 }
 
@@ -52,25 +50,27 @@ const mergeHeaders = (
  *
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
- * 		defaultHeadersMiddleware({
- * 			defaultHeaders: {
- *         			"Content-Type": "application/json; charset=UTF-8",
+ * 		defaultHeadersMiddleware(
+ *      {
+ *         			"Content-Type": "application/json; charset=UTF-8"
  * 			},
+ * 			{
  * 			strategy: "set", // Optional, by default the headers appended
  * 		}),
  * 	)
  * );
  * ```
  *
+ * @param {HeadersInit} defaultHeaders - The default headers to add.
  * @param {DefaultHeaderOptions} options
- * @param {HeadersInit} options.defaultHeaders - The default headers to add.
  * @param {Strategy} [options.strategy="append"] - The strategy to use when merging the headers.
  *   If "set", the default headers will overwrite any existing headers.
  *   If "append", the default headers will be appended to any existing headers.
  * @returns {Middleware} A middleware that adds the default headers to the request.
  */
 export function defaultHeadersMiddleware(
-  { defaultHeaders, strategy = "append" }: DefaultHeaderOptions,
+  defaultHeaders: HeadersInit,
+  { strategy = "append" }: DefaultHeaderOptions = {},
 ): Middleware {
   return (request: Request, next: Handler) => {
     const updatedHeaders = mergeHeaders(

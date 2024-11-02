@@ -3,9 +3,9 @@ import { jwtMiddleware } from "@/middleware/jwt.ts";
 
 Deno.test("JwtMiddleware - Add token to all requests", () => {
   const token = "1234567890";
-  const middleware = jwtMiddleware({
+  const middleware = jwtMiddleware(
     token,
-  });
+  );
 
   const request = new Request("http://example.com");
 
@@ -18,11 +18,13 @@ Deno.test("JwtMiddleware - Add token to all requests", () => {
 
 Deno.test("JwtMiddleware - Conditionally add token for '/api/' paths", () => {
   const token = "1234567890";
-  const middleware = jwtMiddleware({
+  const middleware = jwtMiddleware(
     token,
-    shouldApplyToken: (request: Request) =>
-      new URL(request.url).pathname.startsWith("/api/"),
-  });
+    {
+      shouldApplyToken: (request: Request) =>
+        new URL(request.url).pathname.startsWith("/api/"),
+    },
+  );
 
   const notApiRequest = new Request(
     "https://example.com",
