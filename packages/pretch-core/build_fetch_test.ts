@@ -2,9 +2,9 @@ import { buildFetch } from "@/build_fetch.ts";
 import { expect } from "@std/expect";
 import { stub } from "@std/testing/mock";
 import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
-import { validateStatusMiddleware } from "@/middleware/validate_status.ts";
-import { defaultHeadersMiddleware } from "@/middleware/default_headers.ts";
-import { jwtMiddleware } from "@/middleware/jwt.ts";
+import { validateStatus } from "@/middleware/validate_status.ts";
+import { defaultHeaders } from "@/middleware/default_headers.ts";
+import { authentication } from "@/middleware/jwt.ts";
 
 type Todo = { userId: number; id: number; title: string; completed: boolean };
 
@@ -67,10 +67,10 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
   );
 
   const customFetch = buildFetch(applyMiddlewares(
-    validateStatusMiddleware(
+    validateStatus(
       (status) => status === 404,
     ),
-    defaultHeadersMiddleware(
+    defaultHeaders(
       {
         "Content-Type": "application/json",
       },
@@ -78,7 +78,7 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
         strategy: "append",
       },
     ),
-    jwtMiddleware(
+    authentication(
       "1234567890",
       {
         shouldApplyToken: (request) =>

@@ -6,7 +6,7 @@ import type { Handler, Middleware } from "@/types.ts";
  * @property {number} [maxRetries=3] - The maximum number of times to retry.
  * @property {number} [delay=100] - The delay in milliseconds between retries.
  */
-export interface RetryMiddlewareOptions {
+export interface RetryOptions {
   maxRetries?: number;
   delay?: number;
 }
@@ -17,11 +17,11 @@ export interface RetryMiddlewareOptions {
  * @example Usage
  * ```ts
  * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, retryMiddleware} from "@pretch/core/middleware";
+ * import { applyMiddlewares, retry} from "@pretch/core/middleware";
  *
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
- * 		retryMiddleware({
+ * 		retry({
  * 			maxRetries: 2,
  * 			delay: 1_500,
  * 		}),
@@ -29,11 +29,13 @@ export interface RetryMiddlewareOptions {
  * );
  * ```
  *
- * @param {RetryMiddlewareOptions} [options] - The options for the retry middleware.
+ * @param {RetryOptions} [options] - The options for the retry middleware.
+ * @param {number} [options.maxRetries=3] - The maximum number of times to retry.
+ * @param {number} [options.delay=100] - The delay in milliseconds between retries.
  * @returns {Middleware} A middleware that retries the request.
  */
-export function retryMiddleware(
-  { maxRetries = 3, delay = 100 }: RetryMiddlewareOptions = {},
+export function retry(
+  { maxRetries = 3, delay = 100 }: RetryOptions = {},
 ): Middleware {
   if (delay < 1) throw new Error("Delay must be greater than 0");
 

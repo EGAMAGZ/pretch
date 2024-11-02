@@ -7,13 +7,13 @@ import type { Handler, Middleware } from "@/types.ts";
  * @example Usage of `applyMiddlewares` to enhance the fetch built
  * ```ts
  * import { buildFetch, Middleware, Handler } from "@pretch/core"
- * import { applyMiddlewares, retryMiddleware } from "@pretch/core/middleware"
+ * import { applyMiddlewares, retry } from "@pretch/core/middleware"
  *
  * const customMiddleware: Middleware = (request: Request, next: Handler) => next(request);
  *
  * const customFetch = buildFetch(
  *   applyMiddlewares(
- *     retryMiddleware(),
+ *     retry(),
  *     customMiddleware
  * 	// Built-in or custom middlewares
  *   ),

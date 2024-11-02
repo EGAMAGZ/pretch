@@ -8,7 +8,7 @@ import type { Handler, Middleware } from "@/types.ts";
  * @property {boolean} [shouldCancelBody] -
  *   Whether to cancel the response body when the status is invalid before throwing error.
  */
-export interface ValidateStatusMiddlewareOptions {
+export interface ValidateStatusOptions {
   errorFactory?: (
     status: number,
     request: Request,
@@ -23,11 +23,11 @@ export interface ValidateStatusMiddlewareOptions {
  * @example Usage
  * ```ts
  * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, validateStatusMiddleware} from "@pretch/core/middleware";
+ * import { applyMiddlewares, validateStatus} from "@pretch/core/middleware";
  *
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
- * 		validateStatusMiddleware(
+ * 		validateStatus(
  * 			(status) => 200 <= status && status <= 399,
  * 			{
  * 				errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
@@ -38,9 +38,9 @@ export interface ValidateStatusMiddlewareOptions {
  * );
  * ```
  *
- * @param {(status: number, request: Request, response: Response) => boolean} validateStatus -
+ * @param {(status: number, request: Request, response: Response) => boolean} validate -
  *   A function to validate the response status.
- * @param {ValidateStatusMiddlewareOptions} [options] - Options for the middleware.
+ * @param {ValidateStatusOptions} [options] - Options for the middleware.
  * @param {(status: number, request: Request, response: Response) => Error} [options.errorFactory] -
  *   A factory function to create an error when the status is invalid. Defaults to a function that creates
  *   an error with the response status.
@@ -48,8 +48,8 @@ export interface ValidateStatusMiddlewareOptions {
  *   Whether to cancel the response body when the status is invalid.
  * @returns {Middleware} A middleware that validates the response status.
  */
-export function validateStatusMiddleware(
-  validateStatus: (
+export function validateStatus(
+  validate: (
     status: number,
     request: Request,
     response: Response,
@@ -58,12 +58,12 @@ export function validateStatusMiddleware(
     errorFactory = (_status: number, _request: Request, response: Response) =>
       new Error(`Request failed with status ${response.status}`),
     shouldCancelBody,
-  }: ValidateStatusMiddlewareOptions = {},
+  }: ValidateStatusOptions = {},
 ): Middleware {
   return async (request: Request, next: Handler) => {
     const response = await next(request);
 
-    const isValidStatus = validateStatus(response.status, request, response);
+    const isValidStatus = validate(response.status, request, response);
 
     if (!isValidStatus) {
       if (shouldCancelBody) await response.body?.cancel();

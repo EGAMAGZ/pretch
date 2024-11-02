@@ -1,12 +1,12 @@
 import { expect } from "@std/expect/expect";
 import { spy } from "@std/testing/mock";
-import { validateStatusMiddleware } from "@/middleware/validate_status.ts";
+import { validateStatus } from "@/middleware/validate_status.ts";
 
-Deno.test("ValidateStatusMiddleware - Throw error for status 200", async () => {
+Deno.test("Validate Status Middleware - Throw error for status 200", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response(null, { status: 200 })
   );
-  const middleware = validateStatusMiddleware(
+  const middleware = validateStatus(
     (status) => status === 404,
   );
 
@@ -19,12 +19,12 @@ Deno.test("ValidateStatusMiddleware - Throw error for status 200", async () => {
   await expect(getUser()).rejects.toThrow();
 });
 
-Deno.test("ValidateStatusMiddleware - No error for status 404", async () => {
+Deno.test("Validate Status Middleware - No error for status 404", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response(null, { status: 404 })
   );
 
-  const middleware = validateStatusMiddleware(
+  const middleware = validateStatus(
     (status) => status === 404,
   );
 
@@ -40,7 +40,7 @@ Deno.test("ValidateStatusMiddleware - No error for status 404", async () => {
   await expect(getUser()).resolves.not.toThrow();
 });
 
-Deno.test("ValidateStatusMiddleware - Throw custom error with dumped body", async () => {
+Deno.test("Validate Status Middleware - Throw custom error with dumped body", async () => {
   const errorMessage = "Custom error message";
 
   let capturedResponse: unknown;
@@ -49,7 +49,7 @@ Deno.test("ValidateStatusMiddleware - Throw custom error with dumped body", asyn
     new Response(null, { status: 404 })
   );
 
-  const middleware = validateStatusMiddleware(
+  const middleware = validateStatus(
     (status) => 200 <= status && status <= 399,
     {
       errorFactory: (_status, _request, response) => {

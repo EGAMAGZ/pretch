@@ -1,9 +1,9 @@
 import { expect } from "@std/expect/expect";
-import { jwtMiddleware } from "@/middleware/jwt.ts";
+import { authentication } from "@/middleware/jwt.ts";
 
 Deno.test("JwtMiddleware - Add token to all requests", () => {
   const token = "1234567890";
-  const middleware = jwtMiddleware(
+  const middleware = authentication(
     token,
   );
 
@@ -18,7 +18,7 @@ Deno.test("JwtMiddleware - Add token to all requests", () => {
 
 Deno.test("JwtMiddleware - Conditionally add token for '/api/' paths", () => {
   const token = "1234567890";
-  const middleware = jwtMiddleware(
+  const middleware = authentication(
     token,
     {
       shouldApplyToken: (request: Request) =>
