@@ -70,6 +70,25 @@ function addAuthorizationHeader(
 /**
  * A middleware that adds the given authorization header to the request.
  *
+ * @example Usage
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { applyMiddlewares, authorization } from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ * 	applyMiddlewares(
+ * 		authorization(
+ * 			"123456789abcdef",
+ * 			"bearer",
+ * 			{
+ * 				shouldApplyToken: (request: Request) =>
+ * 					new URL(request.url).pathname.startsWith("/api/"),
+ * 			},
+ * 		),
+ * 	)
+ * );
+ * ```
+ * 
  * @param {string} credentials - The credentials to add to the authorization header.
  * @param {AuthorizationScheme} authScheme - The authorization scheme to use.
  * @param {AuthorizationOptions} options - The options for the middleware.
