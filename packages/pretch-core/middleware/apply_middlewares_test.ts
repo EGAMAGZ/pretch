@@ -2,7 +2,7 @@ import { expect } from "@std/expect/expect";
 import type { Enhancer } from "@/types.ts";
 import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
-import { authentication } from "@/middleware/jwt.ts";
+import { authorization } from "./authorization.ts";
 import { retry } from "@/middleware/retry.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 
@@ -16,8 +16,9 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
         strategy: "append",
       },
     ),
-    authentication(
+    authorization(
       "1234567890",
+      "bearer",
     ),
     validateStatus(
       (status) => status === 404,

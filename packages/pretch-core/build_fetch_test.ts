@@ -4,7 +4,7 @@ import { stub } from "@std/testing/mock";
 import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
-import { authentication } from "@/middleware/jwt.ts";
+import { authorization } from "./middleware/authorization.ts";
 
 type Todo = { userId: number; id: number; title: string; completed: boolean };
 
@@ -78,8 +78,9 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
         strategy: "append",
       },
     ),
-    authentication(
+    authorization(
       "1234567890",
+      "bearer",
       {
         shouldApplyToken: (request) =>
           new URL(request.url).pathname.startsWith("/api/"),
