@@ -88,7 +88,7 @@ function addAuthorizationHeader(
  * 	)
  * );
  * ```
- * 
+ *
  * @param {string} credentials - The credentials to add to the authorization header.
  * @param {AuthorizationScheme} authScheme - The authorization scheme to use.
  * @param {AuthorizationOptions} options - The options for the middleware.

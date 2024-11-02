@@ -1,15 +1,15 @@
 /**
  * # Pretch (core package)
- * Pretch is a library lets you easily create custom fetch functions 
- * with enhanced behaviour to fit your needs without directly modifying the 
+ * Pretch is a library lets you easily create custom fetch functions
+ * with enhanced behaviour to fit your needs without directly modifying the
  * global fetch.
- * 
+ *
  * ## Features
  * * Zero dependencies
  * * Compatible with all JavaScript runtimes (Node.js, Bun, Deno) and browser environments
  * * Ability to create custom built-in middlewares and enhancers
  * * Built-in middlewares and enhancers
- * 
+ *
  * ## Usage
  * ```ts
  * import { buildFetch } from "@pretch/core";
@@ -31,7 +31,7 @@
  * });
  *
  * const createdTodo = await postResponse.json();
- * 
+ *
  * // The following request will keep the enhanced behaviour of adding default headers
  * const putResponse = await customFetch(
  * "https://jsonplaceholder.typicode.com/todos",{
@@ -46,9 +46,9 @@
  *
  * const todoUpdated = await putResponse.json();
  * ```
- * 
+ *
  * ## Built-in middlewares
- * 
+ *
  * ### Validate Status Middleware
  * Creates a middleware that validates the response status.
  * ```ts
@@ -67,7 +67,7 @@
  * 	)
  * );
  * ```
- * 
+ *
  * ### Retry Middleware
  * A middleware that retries a request if it fails.
  *
@@ -84,9 +84,9 @@
  * 	)
  * );
  * ```
- * 
+ *
  * ### Default Headers Middleware
- * 
+ *
  * A middleware that adds default headers to the given request.
  *
  * ```ts
@@ -106,7 +106,7 @@
  * ```
  *
  * ### Authorization Middleware
- * A middleware that adds the given authorization header to the request. 
+ * A middleware that adds the given authorization header to the request.
  * ```ts
  * import { buildFetch } from "@pretch/core";
  * import { applyMiddlewares, authorization } from "@pretch/core/middleware";
@@ -124,7 +124,7 @@
  * 	)
  * );
  * ```
- * 
+ *
  * @module
  */
 

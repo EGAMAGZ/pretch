@@ -29,7 +29,7 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  * });
  *
  * const createdTodo = await postResponse.json();
- * 
+ *
  * // The following request will keep the enhanced behaviour of adding default headers
  * const putResponse = await customFetch(
  * "https://jsonplaceholder.typicode.com/todos",{
