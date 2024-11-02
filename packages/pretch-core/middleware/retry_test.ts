@@ -1,30 +1,30 @@
 import { expect } from "@std/expect/expect";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 import { FakeTime } from "@std/testing/time";
-import { retryMiddleware } from "@/middleware/retry.ts";
+import { retry } from "@/middleware/retry.ts";
 
-Deno.test("RetryMiddleware - Throw error when maxRetries is lower than 1", () => {
+Deno.test("Retry Middleware - Throw error when maxRetries is lower than 1", () => {
   expect(() => {
-    retryMiddleware({
+    retry({
       maxRetries: 0,
     });
   }).toThrow(Error);
 });
 
-Deno.test("RetryMiddleware - Throw error when delay is lower than 1", () => {
+Deno.test("Retry Middleware - Throw error when delay is lower than 1", () => {
   expect(() => {
-    retryMiddleware({
+    retry({
       delay: 0,
     });
   }).toThrow(Error);
 });
 
-Deno.test("RetryMiddleware - Fetch succesfully with one retry", async () => {
+Deno.test("Retry Middleware - Fetch succesfully with one retry", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response("", { status: 200 })
   );
 
-  const middleware = retryMiddleware({
+  const middleware = retry({
     maxRetries: 2,
     delay: 1_000,
   });
@@ -37,13 +37,13 @@ Deno.test("RetryMiddleware - Fetch succesfully with one retry", async () => {
   assertSpyCalls(fetchSpy, 1); // FIXME: Find a way to use expect instead of assert
 });
 
-Deno.test("RetryMiddleware - Fail to fetch after two retries", async () => {
+Deno.test("Retry Middleware - Fail to fetch after two retries", async () => {
   using time = new FakeTime();
   const fetchSpy = spy((_request: Request) => {
     throw new Error("Some error while fetching");
   });
 
-  const middleware = retryMiddleware({
+  const middleware = retry({
     maxRetries: 2,
     delay: 1_000,
   });

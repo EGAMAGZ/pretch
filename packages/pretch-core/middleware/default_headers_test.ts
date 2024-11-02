@@ -1,8 +1,8 @@
 import { expect } from "@std/expect/expect";
-import { defaultHeadersMiddleware } from "@/middleware/default_headers.ts";
+import { defaultHeaders } from "@/middleware/default_headers.ts";
 
-Deno.test("DefaultHeadersMiddleware - Apply headers with 'set' strategy", () => {
-  const middleware = defaultHeadersMiddleware(
+Deno.test("Default Headers Middleware - Apply headers with 'set' strategy", () => {
+  const middleware = defaultHeaders(
     {
       "Content-Type": "application/json",
     },
@@ -23,8 +23,8 @@ Deno.test("DefaultHeadersMiddleware - Apply headers with 'set' strategy", () => 
   });
 });
 
-Deno.test("DefaultHeadersMiddleware - Apply headers with 'append' strategy", () => {
-  const middleware = defaultHeadersMiddleware(
+Deno.test("Default Headers Middleware - Apply headers with 'append' strategy", () => {
+  const middleware = defaultHeaders(
     {
       "Content-Type": "application/json",
     },

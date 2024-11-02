@@ -46,11 +46,11 @@ const mergeHeaders = (
  * @example Usage
  * ```ts
  * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, defaultHeadersMiddleware} from "@pretch/core/middleware";
+ * import { applyMiddlewares, defaultHeaders} from "@pretch/core/middleware";
  *
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
- * 		defaultHeadersMiddleware({
+ * 		defaultHeaders({
  *         			"Content-Type": "application/json; charset=UTF-8"
  * 			},
  * 			{
@@ -60,21 +60,21 @@ const mergeHeaders = (
  * );
  * ```
  *
- * @param {HeadersInit} defaultHeaders - The default headers to add.
+ * @param {HeadersInit} headers - The default headers to add.
  * @param {DefaultHeaderOptions} options
  * @param {Strategy} [options.strategy="append"] - The strategy to use when merging the headers.
  *   If "set", the default headers will overwrite any existing headers.
  *   If "append", the default headers will be appended to any existing headers.
  * @returns {Middleware} A middleware that adds the default headers to the request.
  */
-export function defaultHeadersMiddleware(
-  defaultHeaders: HeadersInit,
+export function defaultHeaders(
+  headers: HeadersInit,
   { strategy = "append" }: DefaultHeaderOptions = {},
 ): Middleware {
   return (request: Request, next: Handler) => {
     const updatedHeaders = mergeHeaders(
       request.headers,
-      defaultHeaders,
+      headers,
       strategy,
     );
     const updatedRequest = new Request(request, { headers: updatedHeaders });

@@ -1,14 +1,14 @@
 import { expect } from "@std/expect/expect";
 import type { Enhancer } from "@/types.ts";
 import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
-import { defaultHeadersMiddleware } from "@/middleware/default_headers.ts";
-import { jwtMiddleware } from "@/middleware/jwt.ts";
-import { retryMiddleware } from "@/middleware/retry.ts";
-import { validateStatusMiddleware } from "@/middleware/validate_status.ts";
+import { defaultHeaders } from "@/middleware/default_headers.ts";
+import { authorization } from "./authorization.ts";
+import { retry } from "@/middleware/retry.ts";
+import { validateStatus } from "@/middleware/validate_status.ts";
 
 Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => {
   const enhancer: Enhancer = applyMiddlewares(
-    defaultHeadersMiddleware(
+    defaultHeaders(
       {
         "Content-Type": "application/json",
       },
@@ -16,13 +16,14 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
         strategy: "append",
       },
     ),
-    jwtMiddleware(
+    authorization(
       "1234567890",
+      "bearer",
     ),
-    validateStatusMiddleware(
+    validateStatus(
       (status) => status === 404,
     ),
-    retryMiddleware({
+    retry({
       delay: 1_000,
       maxRetries: 2,
     }),
