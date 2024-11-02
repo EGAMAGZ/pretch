@@ -20,6 +20,24 @@ export interface ValidateStatusMiddlewareOptions {
 /**
  * Creates a middleware that validates the response status.
  *
+ * @example Usage
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { applyMiddlewares, validateStatusMiddleware} from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ * 	applyMiddlewares(
+ * 		validateStatusMiddleware(
+ *			(status) => 200 <= status && status <= 399,
+ *			{
+ *				errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
+ *				shouldCancelBody: true
+ *			} // Optional
+ * 		),
+ * 	)
+ * );
+ * ```
+ * 
  * @param {(status: number, request: Request, response: Response) => boolean} validateStatus -
  *   A function to validate the response status.
  * @param {ValidateStatusMiddlewareOptions} [options] - Options for the middleware.

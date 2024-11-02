@@ -1,19 +1,4 @@
 /**
- * The result of a fetch request.
- *
- * @property {*} data - The data returned from the request.
- * @property {boolean} loading - Whether the request is loading.
- * @property {Error} error - The error returned from the request.
- * @property {Function} refetch - A function to refetch the request.
- */
-export type FetchResult<T> = {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-  refetch: (newUrl?: string) => void;
-};
-
-/**
  * A function that takes a request and returns a response.
  *
  * @param {Request} request - The request.
@@ -34,21 +19,36 @@ export interface Enhancer {
 }
 
 /**
- * A middleware function.
+ * A middleware function to enhacne fetch behaviour.
  *
  * @example Examples of custom middleware definition
  * ```ts
  * import { Middleware, Handler } from "@pretch/core";
  *
- * const logErrorMiddleware: Middleware = (request: Request, next: Handler) => {
- * 	// ...
- * 	return next(request);
+ * async function simpleMiddleware(request: Request, next: Handler){
+ * 	try {
+ * 		// Logic before	request
+ * 		const response = await next(request);
+ * 		// Logic after request
+ * 		return response;
+ * 	} catch(error){
+ * 		// Handle error
+ * 		throw error; // Throw error or return response
+ * 	}
  * }
  *
- * function asyncMiddleware(): Middleware {
+ *
+ * function curriedMiddleware(): Middleware {
  * 	return async (request: Request, next: Handler) => {
- * 		// ...
- * 		return await next(request);
+ * 		try {
+ *			// Logic before	request
+ *			const response = await next(request);
+ *			// Logic after request
+ *			return response;
+ * 		} catch(error){
+ * 			// Handler error
+ * 			throw error; // Throw error or return response
+ * 		}
  * 	}
  * }
  * ```
@@ -62,7 +62,7 @@ export interface Middleware {
 }
 
 /**
- * A custom fetch function.
+ * A custom fetch function returned by {@link buildFetch}
  *
  * @param {string | URL} url - The URL to fetch.
  * @param {RequestInit} [options] - The options for the request.

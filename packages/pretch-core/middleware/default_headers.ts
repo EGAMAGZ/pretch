@@ -50,8 +50,7 @@ const mergeHeaders = (
  *
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
- * 		defaultHeadersMiddleware(
- *      {
+ * 		defaultHeadersMiddleware({
  *         			"Content-Type": "application/json; charset=UTF-8"
  * 			},
  * 			{
