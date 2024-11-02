@@ -1,0 +1,11 @@
+{
+  "name": "@pretch/core",
+  "version": "0.5.1",
+  "exports": {
+    ".": "./mod.ts",
+    "./middleware": "./middleware/mod.ts"
+  },
+  "imports": {
+    "@/": "./"
+  }
+}

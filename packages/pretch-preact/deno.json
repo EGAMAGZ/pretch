@@ -1,0 +1,15 @@
+{
+  "name": "@pretch/preact",
+  "version": "0.1.2",
+  "tasks": {
+    "doc": "deno doc --html --name='Pretch' src"
+  },
+  "imports": {
+    "@preact/signals": "npm:@preact/signals@^1.3.0",
+    "preact": "npm:preact@^10.24.1",
+    "@/": "./"
+  },
+  "exports": {
+    ".": "./mod.ts"
+  }
+}
