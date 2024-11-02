@@ -28,16 +28,16 @@ export interface ValidateStatusMiddlewareOptions {
  * const customFetch = buildFetch(
  * 	applyMiddlewares(
  * 		validateStatusMiddleware(
- *			(status) => 200 <= status && status <= 399,
- *			{
- *				errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
- *				shouldCancelBody: true
- *			} // Optional
+ * 			(status) => 200 <= status && status <= 399,
+ * 			{
+ * 				errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
+ * 				shouldCancelBody: true
+ * 			} // Optional
  * 		),
  * 	)
  * );
  * ```
- * 
+ *
  * @param {(status: number, request: Request, response: Response) => boolean} validateStatus -
  *   A function to validate the response status.
  * @param {ValidateStatusMiddlewareOptions} [options] - Options for the middleware.

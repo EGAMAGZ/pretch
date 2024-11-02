@@ -17,17 +17,17 @@ export interface Handler {
  *
  * // Custom enhancer that adds an authorization header to every request
  * function authHeaderEnhancer(handler: Handler){
- *	return async (request: Request) => {
- *		const modifiedRequest = new Request(request, {
- *			headers: {
- *				...request.headers,
- *				'Authorization': "Bearer my-token", // Custom header
- *			},
- *		});
- *		
+ * 	return async (request: Request) => {
+ * 		const modifiedRequest = new Request(request, {
+ * 			headers: {
+ * 				...request.headers,
+ * 				'Authorization': "Bearer my-token", // Custom header
+ * 			},
+ * 		});
+ *
  * 		// The modified request is passed to the next handler
- *		return handler(modifiedRequest);
- *	};
+ * 		return handler(modifiedRequest);
+ * 	};
  * }
  * ```
  *
@@ -57,14 +57,13 @@ export interface Enhancer {
  * 	}
  * }
  *
- *
  * function curriedMiddleware(): Middleware {
  * 	return async (request: Request, next: Handler) => {
  * 		try {
- *			// Logic before	request
- *			const response = await next(request);
- *			// Logic after request
- *			return response;
+ * 			// Logic before	request
+ * 			const response = await next(request);
+ * 			// Logic after request
+ * 			return response;
  * 		} catch(error){
  * 			// Handler error
  * 			throw error; // Throw error or return response

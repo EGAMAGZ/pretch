@@ -1,6 +1,6 @@
 import { useSignal, useSignalEffect } from "@preact/signals";
 import { buildFetch, type Enhancer } from "@pretch/core";
-import type {FetchResult } from "@/types.ts";
+import type { FetchResult } from "@/types.ts";
 
 export function useFetch<T>(
   url: string | URL,
