@@ -1,18 +1,14 @@
 import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
 
 /**
- * Creates a custom fetch function with optional enhancement.
+ * Creates a custom fetch function with optional enhancement. This enhancement changes the default fetch function's behaviour
+ * without directly modifying the global fetch. The custom fetch function returned can be used just like the standard fetch but
+ * with the behaviour defined by the configured enhancer. The custom fetch can be reused for multiple requests. Each request will
+ * apply the same enhancer behavior.
  *
- * Create a custom fetch without any enhancement
- * ```ts
- * import { buildFetch } from "@pretch/core";
- * const customFetch = buildFetch();
+ * In the next example, fetch is enhaced with a middleware that will be automatically add default headers to every request
  *
- * const response = await customFetch("https://jsonplaceholder.typicode.com/todos");
- * const todos = await response.json();
- * ```
- *
- * Build a custom fetch with behaviour enhaced through middlewares
+ * @example Build a custom fetch with behaviour enhaced through middlewares
  * ```ts
  * import { buildFetch } from "@pretch/core";
  * import { applyMiddlewares, defaultHeadersMiddleware} from "@pretch/core/middleware";
@@ -28,13 +24,29 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  *   ),
  * );
  *
- * let response = await customFetch("https://jsonplaceholder.typicode.com/todos/1",{
+ * const postResponse = await customFetch("https://jsonplaceholder.typicode.com/todos/1",{
  *   method: "GET"
  * });
  *
- * const createdTodo = await response.json();
- * //
+ * const createdTodo = await postResponse.json();
+ *
+ * const putResponse = await customFetch(
+ * "https://jsonplaceholder.typicode.com/todos",{
+ * 	method: "PUT",
+ * 	body: JSON.stringify({
+ * 			title: "Updated todo",
+ * 			body: "Same task",
+ * 			userId: 1,
+ * 		}),
+ * 	},
+ * );
+ *
+ * const todoUpdated = await putResponse.json();
  * ```
+ *
+ * **Note**: Pretch provides the built-in enhancer {@link applyMiddlewares}, which allows to add a list of middleware functions
+ * for handling request modification or defaults, and a couple of built-in middlewares which are: {@link validateStatusMiddleware},
+ * {@link retryMiddleware}, {@link jwtMiddleware} and {@link defaultHeadersMiddleware}
  *
  * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
  * @returns {CustomFetch} A custom fetch function that applies the enhancer, if provided.

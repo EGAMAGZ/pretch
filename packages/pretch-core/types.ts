@@ -11,6 +11,26 @@ export interface Handler {
 /**
  * An enhancer function that takes a handler and returns a new handler.
  *
+ * @example Usage
+ * ```ts
+ * import type { Enhancer, Handler } from "@pretch/core";
+ *
+ * // Custom enhancer that adds an authorization header to every request
+ * function authHeaderEnhancer(handler: Handler){
+ *	return async (request: Request) => {
+ *		const modifiedRequest = new Request(request, {
+ *			headers: {
+ *				...request.headers,
+ *				'Authorization': "Bearer my-token", // Custom header
+ *			},
+ *		});
+ *		
+ * 		// The modified request is passed to the next handler
+ *		return handler(modifiedRequest);
+ *	};
+ * }
+ * ```
+ *
  * @param {Handler} handler - The handler to enhance.
  * @returns {Handler} The enhanced handler.
  */
