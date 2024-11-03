@@ -1,6 +1,7 @@
 {
   "name": "@pretch/preact",
-  "version": "0.1.2",
+  "version": "0.1.3",
+  "license": "MIT",
   "tasks": {
     "doc": "deno doc --html --name='Pretch' src"
   },
