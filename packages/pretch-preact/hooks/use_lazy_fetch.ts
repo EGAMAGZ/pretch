@@ -1,18 +1,19 @@
-import { useSignal, useSignalEffect } from "@preact/signals";
-import { buildFetch, type Enhancer } from "@pretch/core";
-import type { FetchResult } from "@/types.ts";
+import type { Enhancer } from "@pretch/core";
+import { useSignal } from "@preact/signals";
+import { buildFetch } from "../../pretch-core/build_fetch.ts";
+import type { LazyFetchResult } from "@/types.ts";
 
-export function useFetch<T>(
-  url: string | URL,
+export function useLazyFetch<T>(
+  url: string,
   options?: RequestInit,
   enhancer?: Enhancer,
-): FetchResult<T> {
+): LazyFetchResult<T> {
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
   const error = useSignal<Error | null>(null);
 
   async function fetchData(
-    currentUrl: string | URL,
+    currentUrl?: string | URL,
     currentOptions?: RequestInit,
   ) {
     loading.value = true;
@@ -20,7 +21,10 @@ export function useFetch<T>(
 
     try {
       const customFetch = buildFetch(enhancer);
-      const response = await customFetch(currentUrl, currentOptions);
+      const response = await customFetch(
+        currentUrl || url,
+        currentOptions || options,
+      );
 
       data.value = (await response.json()) as T;
     } catch (err) {
@@ -30,17 +34,10 @@ export function useFetch<T>(
     }
   }
 
-  useSignalEffect(() => {
-    fetchData(url, options);
-  });
-
-  const refetch = (newUrl?: string, newOptions?: RequestInit) =>
-    fetchData(newUrl || url, newOptions || options);
-
   return {
     data: data.value,
     loading: loading.value,
     error: error.value,
-    refetch,
+    fetchData,
   };
 }
