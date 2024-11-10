@@ -1,4 +1,4 @@
-import { type Enhancer, buildFetch } from "@pretch/core";
+import { buildFetch, type Enhancer } from "@pretch/core";
 import { useSignal } from "@preact/signals";
 import type { LazyFetchResult } from "@/types.ts";
 

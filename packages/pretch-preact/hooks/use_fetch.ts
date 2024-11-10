@@ -2,17 +2,17 @@ import { useSignal, useSignalEffect } from "@preact/signals";
 import { buildFetch, type Enhancer } from "@pretch/core";
 import type { FetchResult } from "@/types.ts";
 
-  /**
-   * A hook that creates a custom fetch function with optional enhancement
-   * and tracks the status of the request. Automatically fetches the data
-   * when the component mounts.
-   *
-   * @param {string | URL} url - The URL to fetch.
-   * @param {RequestInit} [options] - The options for the request.
-   * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
-   * @returns {FetchResult<T>} An object with the `data`, `loading`, and `error` properties
-   *   and a `refetch` method.
-   */
+/**
+ * A hook that creates a custom fetch function with optional enhancement
+ * and tracks the status of the request. Automatically fetches the data
+ * when the component mounts.
+ *
+ * @param {string | URL} url - The URL to fetch.
+ * @param {RequestInit} [options] - The options for the request.
+ * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
+ * @returns {FetchResult<T>} An object with the `data`, `loading`, and `error` properties
+ *   and a `refetch` method.
+ */
 export function useFetch<T>(
   url: string | URL,
   options?: RequestInit,
