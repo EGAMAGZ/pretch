@@ -1,5 +1,5 @@
 /**
- * # Pretch (core package)
+ * # @pretch/core
  * Pretch is a library lets you easily create custom fetch functions
  * with enhanced behaviour to fit your needs without directly modifying the
  * global fetch.
