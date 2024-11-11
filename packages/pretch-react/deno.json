@@ -6,6 +6,7 @@
     ".": "./mod.ts"
   },
   "imports": {
-    "@/": "./"
+    "@/": "./",
+    "@preact/signals-react": "npm:@preact/signals-react@^2.2.0"
   }
 }
