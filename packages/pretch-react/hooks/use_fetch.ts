@@ -6,7 +6,7 @@ import type { FetchResult } from "@/types.ts";
  * A hook that creates a custom fetch function with optional enhancement
  * and tracks the status of the request. Automatically fetches the data
  * when the component mounts.
- * 
+ *
  * @param {string | URL} url - The URL to fetch.
  * @param {RequestInit} [options] - The options for the request.
  * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
