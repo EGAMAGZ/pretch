@@ -1,5 +1,19 @@
 ### 2024.11.03
 
+#### @pretch/core 0.5.2 (patch)
+
+- chore(*): Added license to each workspace
+
+#### @pretch/preact 0.1.4 (patch)
+
+- chore(*): Added license to each workspace
+
+#### @pretch/react 0.0.3 (patch)
+
+- chore(*): Added license to each workspace
+
+### 2024.11.03
+
 #### @pretch/core 0.5.1 (minor)
 
 - docs(core): Improved jsdoc for buildFetch function
