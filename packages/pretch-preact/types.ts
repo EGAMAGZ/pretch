@@ -5,13 +5,13 @@
  * @property {T | null} data - The data returned by the fetch, or null if not available.
  * @property {boolean} loading - Indicates whether the fetch operation is in progress.
  * @property {Error | null} error - The error encountered during the fetch, or null if none.
- * @property {(newUrl?: string) => void} refetch - A function to refetch the data with an optional new URL.
+ * @property {(newUrl?: string, newOptions?: RequestInit) => void} refetch - A function to refetch the data with an optional new URL.
  */
 export type FetchResult<T> = {
   data: T | null;
   loading: boolean;
   error: Error | null;
-  refetch: (newUrl?: string) => void;
+  refetch: (newUrl?: string, newOptions?: RequestInit) => void;
 };
 
 /**
