@@ -34,7 +34,7 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
   const inner = enhancer((req: Request) => {
     expect(req.headers.has("Authorization")).toEqual(`Bearer 1234567890`);
     expect(req.headers.get("content-type")).toBe("application/json");
-    return new Response("", { status: 200 });
+    return new Response(null, { status: 200 });
   });
 
   await expect(inner(request)).rejects.toThrow();
