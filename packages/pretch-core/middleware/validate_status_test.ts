@@ -6,9 +6,9 @@ Deno.test("Validate Status Middleware - Throw error for status 200", async () =>
   const fetchSpy = spy((_request: Request) =>
     new Response(null, { status: 200 })
   );
-  const middleware = validateStatus(
-    (status) => status === 404,
-  );
+  const middleware = validateStatus({
+    validate: (status) => status === 404,
+  });
 
   const request = new Request(
     "https://example.com",
@@ -24,8 +24,9 @@ Deno.test("Validate Status Middleware - No error for status 404", async () => {
     new Response(null, { status: 404 })
   );
 
-  const middleware = validateStatus(
-    (status) => status === 404,
+  const middleware = validateStatus({
+    validate: (status) => status === 404,
+  }
   );
 
   const request = new Request(
@@ -49,16 +50,14 @@ Deno.test("Validate Status Middleware - Throw custom error with dumped body", as
     new Response(null, { status: 404 })
   );
 
-  const middleware = validateStatus(
-    (status) => 200 <= status && status <= 399,
-    {
-      errorFactory: (_status, _request, response) => {
-        capturedResponse = response.body;
-        return new Error(errorMessage);
-      },
-      shouldCancelBody: true,
+  const middleware = validateStatus({
+    validate: (status) => 200 <= status && status <= 399,
+    errorFactory: (_status, _request, response) => {
+      capturedResponse = response.body;
+      return new Error(errorMessage);
     },
-  );
+    shouldCancelBody: true,
+  });
 
   const request = new Request(
     "https://example.com",

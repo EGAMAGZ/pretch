@@ -67,9 +67,9 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
   );
 
   const customFetch = buildFetch(applyMiddlewares(
-    validateStatus(
-      (status) => status === 404,
-    ),
+    validateStatus({
+      validate: (status) => status === 404,
+    }),
     defaultHeaders(
       {
         "Content-Type": "application/json",

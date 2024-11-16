@@ -20,9 +20,9 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
       "1234567890",
       "bearer",
     ),
-    validateStatus(
-      (status) => status === 404,
-    ),
+    validateStatus({
+      validate: (status) => status === 404,
+    }),
     retry({
       delay: 1_000,
       maxRetries: 2,
