@@ -61,7 +61,7 @@
  * 	applyMiddlewares(
  * 		validateStatus(
  * 			{
- *              validate:(status) => 200 <= status && status <= 399, 
+ *              validate:(status) => 200 <= status && status <= 399,
  * 				errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
  * 				shouldCancelBody: true
  * 			} // Optional

@@ -2,11 +2,25 @@ import { expect } from "@std/expect/expect";
 import type { Enhancer } from "@/types.ts";
 import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
-import { authorization } from "./authorization.ts";
+import { authorization } from "@/middleware/authorization.ts";
 import { retry } from "@/middleware/retry.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
+import { stub } from "@std/testing/mock";
 
-Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => {
+Deno.test("applyMiddlewares - should correctly chain multiple middleware configurations", async () => {
+  let capturedHeaders = new Headers();
+
+  using _ = stub(
+    globalThis,
+    "fetch",
+    // deno-lint-ignore require-await
+    async (input, init) => {
+      const request = new Request(input, init);
+      capturedHeaders = request.headers;
+      return new Response(null);
+    },
+  );
+
   const enhancer: Enhancer = applyMiddlewares(
     defaultHeaders(
       {
@@ -31,11 +45,14 @@ Deno.test("ApplyMiddlewares - Use multiple middlewares with fetch", async () => 
 
   const request = new Request("http://example.com");
 
-  const inner = enhancer((req: Request) => {
-    expect(req.headers.has("Authorization")).toEqual(`Bearer 1234567890`);
-    expect(req.headers.get("content-type")).toBe("application/json");
-    return new Response(null, { status: 200 });
-  });
+  const inner = enhancer(fetch);
 
   await expect(inner(request)).rejects.toThrow();
+
+  expect(capturedHeaders.get("Authorization")).toEqual(
+    `Bearer 1234567890`,
+  );
+  expect(capturedHeaders.get("content-type")).toEqual(
+    "application/json",
+  );
 });
