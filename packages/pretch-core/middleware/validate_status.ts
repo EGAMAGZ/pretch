@@ -9,6 +9,11 @@ import type { Handler, Middleware } from "@/types.ts";
  *   Whether to cancel the response body when the status is invalid before throwing error.
  */
 export interface ValidateStatusOptions {
+  validate?: (
+    status: number,
+    request: Request,
+    response: Response,
+  ) => boolean;
   errorFactory?: (
     status: number,
     request: Request,
@@ -26,35 +31,29 @@ export interface ValidateStatusOptions {
  * import { applyMiddlewares, validateStatus} from "@pretch/core/middleware";
  *
  * const customFetch = buildFetch(
- * 	applyMiddlewares(
- * 		validateStatus(
- * 			(status) => 200 <= status && status <= 399,
- * 			{
- * 				errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
- * 				shouldCancelBody: true
- * 			} // Optional
- * 		),
- * 	)
+ *   applyMiddlewares(
+ *     validateStatus({
+ *       validate: (status) => 200 <= status && status <= 399,
+ *       errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),
+ *       shouldCancelBody: true
+ *     })
+ *   )
  * );
  * ```
  *
- * @param {(status: number, request: Request, response: Response) => boolean} validate -
- *   A function to validate the response status.
  * @param {ValidateStatusOptions} [options] - Options for the middleware.
+ * @param {(status: number, request: Request, response: Response) => boolean} [options.validate] -
+ *   A function that returns true if the status is valid. Defaults to accepting 200-299.
  * @param {(status: number, request: Request, response: Response) => Error} [options.errorFactory] -
  *   A factory function to create an error when the status is invalid. Defaults to a function that creates
  *   an error with the response status.
  * @param {boolean} [options.shouldCancelBody] -
- *   Whether to cancel the response body when the status is invalid.
+ *   Whether to cancel the response body when the status is invalid before throwing the error.
  * @returns {Middleware} A middleware that validates the response status.
  */
 export function validateStatus(
-  validate: (
-    status: number,
-    request: Request,
-    response: Response,
-  ) => boolean,
   {
+    validate = (status) => status >= 200 && status < 300,
     errorFactory = (_status: number, _request: Request, response: Response) =>
       new Error(`Request failed with status ${response.status}`),
     shouldCancelBody,
