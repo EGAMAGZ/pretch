@@ -1,32 +1,34 @@
 import { expect } from "@std/expect/expect";
-import { spy } from "@std/testing/mock";
+import { spy, stub } from "@std/testing/mock";
 import { validateStatus } from "@/middleware/validate_status.ts";
 
-Deno.test("Validate Status Middleware - Throw error for status 200", async () => {
-  const fetchSpy = spy((_request: Request) =>
-    new Response(null, { status: 200 })
+Deno.test("Validate status middleware - should reject responses with unexpected status codes", async () => {
+  using _ = stub(
+    globalThis,
+    "fetch", // deno-lint-ignore require-await
+    async () => new Response(null),
   );
-  const middleware = validateStatus(
-    (status) => status === 404,
-  );
+  const middleware = validateStatus({
+    validate: (status) => status === 404,
+  });
 
   const request = new Request(
     "https://example.com",
   );
 
-  const getUser = () => middleware(request, (r) => fetchSpy(r));
+  const getUser = () => middleware(request, fetch);
 
   await expect(getUser()).rejects.toThrow();
 });
 
-Deno.test("Validate Status Middleware - No error for status 404", async () => {
+Deno.test("Validate status middleware - should accept responses with expected status codes", async () => {
   const fetchSpy = spy((_request: Request) =>
     new Response(null, { status: 404 })
   );
 
-  const middleware = validateStatus(
-    (status) => status === 404,
-  );
+  const middleware = validateStatus({
+    validate: (status) => status === 404,
+  });
 
   const request = new Request(
     "https://example.com",
@@ -40,7 +42,7 @@ Deno.test("Validate Status Middleware - No error for status 404", async () => {
   await expect(getUser()).resolves.not.toThrow();
 });
 
-Deno.test("Validate Status Middleware - Throw custom error with dumped body", async () => {
+Deno.test("Validate status middleware - should support custom error handling with body cleanup", async () => {
   const errorMessage = "Custom error message";
 
   let capturedResponse: unknown;
@@ -49,16 +51,14 @@ Deno.test("Validate Status Middleware - Throw custom error with dumped body", as
     new Response(null, { status: 404 })
   );
 
-  const middleware = validateStatus(
-    (status) => 200 <= status && status <= 399,
-    {
-      errorFactory: (_status, _request, response) => {
-        capturedResponse = response.body;
-        return new Error(errorMessage);
-      },
-      shouldCancelBody: true,
+  const middleware = validateStatus({
+    validate: (status) => 200 <= status && status <= 399,
+    errorFactory: (_status, _request, response) => {
+      capturedResponse = response.body;
+      return new Error(errorMessage);
     },
-  );
+    shouldCancelBody: true,
+  });
 
   const request = new Request(
     "https://example.com",

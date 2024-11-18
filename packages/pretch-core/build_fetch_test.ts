@@ -15,7 +15,7 @@ const expectedTodo: Todo = {
   completed: false,
 };
 
-Deno.test("Build fetch - Sucessful fetch with async data", async (ctx) => {
+Deno.test("Build fetch - should successfully handle async JSON responses", async (ctx) => {
   using _ = stub(
     globalThis,
     "fetch",
@@ -38,7 +38,7 @@ Deno.test("Build fetch - Sucessful fetch with async data", async (ctx) => {
   });
 });
 
-Deno.test("Build fetch - Unsuccessful fetch with async data", async () => {
+Deno.test("Build fetch - should handle unsuccessful responses appropriately", async () => {
   using _ = stub(
     globalThis,
     "fetch",
@@ -53,23 +53,23 @@ Deno.test("Build fetch - Unsuccessful fetch with async data", async () => {
   await response.body?.cancel();
 });
 
-Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
+Deno.test("Build fetch - should correctly apply multiple middleware configurations", () => {
   let capturedHeaders = new Headers();
   using _ = stub(
     globalThis,
     "fetch",
     // deno-lint-ignore require-await
-    async (_input, init) => {
-      const request = new Request(_input, init);
+    async (input, init) => {
+      const request = new Request(input, init);
       capturedHeaders = request.headers;
       return new Response(null, { status: 404 });
     },
   );
 
   const customFetch = buildFetch(applyMiddlewares(
-    validateStatus(
-      (status) => status === 404,
-    ),
+    validateStatus({
+      validate: (status) => status === 404,
+    }),
     defaultHeaders(
       {
         "Content-Type": "application/json",
@@ -92,8 +92,8 @@ Deno.test("Build fetch - Successfully fetch applying middlewares", () => {
     method: "GET",
   });
 
-  expect(capturedHeaders.get("Authorization")).toBe("Bearer 1234567890");
-  expect(capturedHeaders.get("Content-type")).toBe("application/json");
+  expect(capturedHeaders.get("Authorization")).toEqual("Bearer 1234567890");
+  expect(capturedHeaders.get("Content-type")).toEqual("application/json");
 
   expect(response).resolves.not.toThrow();
 });
