@@ -3,7 +3,6 @@ import type { Handler, Middleware } from "@/types.ts";
 /**
  * Represents the supported authorization schemes.
  *
- * @typedef {"basic" | "bearer" | "digest" | "oauth" | "apikey" | "jwt"} AuthorizationScheme
  * @property {"basic"} basic - Basic authentication scheme.
  * @property {"bearer"} bearer - Bearer token authentication scheme.
  * @property {"digest"} digest - Digest authentication scheme.

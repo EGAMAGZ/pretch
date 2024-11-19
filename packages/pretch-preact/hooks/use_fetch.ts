@@ -7,6 +7,15 @@ import type { FetchResult } from "@/types.ts";
  * and tracks the status of the request. Automatically fetches the data
  * when the component mounts.
  *
+ * ```tsx
+ * import { useFetch } from "@pretch/preact";
+ * ```
+ *
+ * ```tsx
+ * import { useFetch } from "@pretch/preact";
+ * import { } from "@pretch/core";
+ * ```
+ *
  * @param {string | URL} url - The URL to fetch.
  * @param {RequestInit} [options] - The options for the request.
  * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.

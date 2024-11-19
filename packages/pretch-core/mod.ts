@@ -1,5 +1,6 @@
 /**
  * # @pretch/core
+ *
  * Pretch is a library lets you easily create custom fetch functions
  * with enhanced behaviour to fit your needs without directly modifying the
  * global fetch.
@@ -51,8 +52,10 @@
  *
  * Pretch provides a built-in enhancer to apply middlewares on each request
  *
- * ### Validate Status Middleware
+ * ### Validate Status
+ *
  * Creates a middleware that validates the response status.
+ *
  * ```ts
  * import { buildFetch } from "@pretch/core";
  * import { applyMiddlewares, validateStatus} from "@pretch/core/middleware";
@@ -70,7 +73,8 @@
  * );
  * ```
  *
- * ### Retry Middleware
+ * ### Retry
+ *
  * A middleware that retries a request if it fails.
  *
  * ```ts
@@ -87,7 +91,7 @@
  * );
  * ```
  *
- * ### Default Headers Middleware
+ * ### Default Headers
  *
  * A middleware that adds default headers to the given request.
  *
@@ -107,14 +111,16 @@
  * );
  * ```
  *
- * ### Authorization Middleware
+ * ### Authorization
+ *
  * A middleware that adds the given authorization header to the request.
+ *
  * ```ts
  * import { buildFetch } from "@pretch/core";
  * import { applyMiddlewares, authorization } from "@pretch/core/middleware";
  *
  * const customFetch = buildFetch(
- * 	applyMiddlewares(
+ * applyMiddlewares(
  * 		authorization(
  * 			"123456789abcdef",
  * 			"bearer",
@@ -123,7 +129,7 @@
  * 					new URL(request.url).pathname.startsWith("/api/"),
  * 			},
  * 		),
- * 	)
+ *   )
  * );
  * ```
  *
