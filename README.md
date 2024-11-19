@@ -7,11 +7,11 @@ JavaScript, React, and Preact.
 
 - 🌐 **Universal Compatibility** - Works in all JavaScript runtimes (Node.js,
   Bun, Deno) and browsers
-- 🛠 **Middleware System** - Built-in and custom middleware enhancer
 - ⚛️ **Framework Integration** - Dedicated hooks for React and Preact
 - 🔧 **Highly Customizable** - Create custom fetch functions with enhanced
   behavior
 - 📝 **TypeScript Ready** - Full TypeScript support out of the box
+- 🛠 **Middleware System** - Built-in and custom middleware support
 
 ## Packages
 

@@ -1,17 +1,43 @@
 /**
- * Module for Built-in Enhancer and Middleware Functions
- *
- * This module includes an enhancer for applying middleware functions, along with several built-in middleware options*
- *
- * Built-in enhancer:
- * - {@link applyMiddlewares}
- *
- * Built-in middlewares:
- * - {@link authorization}
- * - {@link defaultHeaders}
- * - {@link validateStatus}
- * - {@link retry}
- *
+ * # Middleware Module
+ * 
+ * This module provides a powerful middleware system for enhancing fetch behavior through composable functions.
+ * It includes both a middleware application utility and several pre-built middleware functions for common use cases.
+ * 
+ * The {@link applyMiddlewares} function that combines multiple middlewares into a single enhancer. The middlewares are 
+ * executed in the order they are provided, allowing for request/response transformation.
+ * 
+ * ## Built-in Middlewares
+ * 
+ * ### Authentication & Headers
+ * - {@link authorization} - Adds authentication headers with support for multiple schemes (Bearer, Basic, JWT, etc.)
+ * - {@link defaultHeaders} - Manages default headers with flexible append/set strategies
+ * 
+ * ### Request Handling
+ * - {@link validateStatus} - Validates response status codes with custom error handling
+ * - {@link retry} - Implements retry logic for failed requests with configurable delays
+ * 
+ * ## Usage Example
+ * 
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { 
+ *   applyMiddlewares, 
+ *   authorization, 
+ *   defaultHeaders,
+ *   validateStatus 
+ * } from "@pretch/core/middleware";
+ * 
+ * const customFetch = buildFetch(
+ *   applyMiddlewares(
+ *     // Middlewares are executed in order
+ *     defaultHeaders({ "Content-Type": "application/json" }),
+ *     authorization("token", "bearer"),
+ *     validateStatus({ validate: status => status < 400 })
+ *   )
+ * );
+ * ```
+ * 
  * @module
  */
 export * from "@/middleware/apply_middlewares.ts";
