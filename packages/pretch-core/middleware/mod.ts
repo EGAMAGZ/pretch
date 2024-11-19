@@ -1,33 +1,33 @@
 /**
  * # Middleware Module
- * 
+ *
  * This module provides a powerful middleware system for enhancing fetch behavior through composable functions.
  * It includes both a middleware application utility and several pre-built middleware functions for common use cases.
- * 
- * The {@link applyMiddlewares} function that combines multiple middlewares into a single enhancer. The middlewares are 
+ *
+ * The {@link applyMiddlewares} function that combines multiple middlewares into a single enhancer. The middlewares are
  * executed in the order they are provided, allowing for request/response transformation.
- * 
+ *
  * ## Built-in Middlewares
- * 
+ *
  * ### Authentication & Headers
  * - {@link authorization} - Adds authentication headers with support for multiple schemes (Bearer, Basic, JWT, etc.)
  * - {@link defaultHeaders} - Manages default headers with flexible append/set strategies
- * 
+ *
  * ### Request Handling
  * - {@link validateStatus} - Validates response status codes with custom error handling
  * - {@link retry} - Implements retry logic for failed requests with configurable delays
- * 
+ *
  * ## Usage Example
- * 
+ *
  * ```ts
  * import { buildFetch } from "@pretch/core";
- * import { 
- *   applyMiddlewares, 
- *   authorization, 
+ * import {
+ *   applyMiddlewares,
+ *   authorization,
  *   defaultHeaders,
- *   validateStatus 
+ *   validateStatus
  * } from "@pretch/core/middleware";
- * 
+ *
  * const customFetch = buildFetch(
  *   applyMiddlewares(
  *     // Middlewares are executed in order
@@ -37,7 +37,7 @@
  *   )
  * );
  * ```
- * 
+ *
  * @module
  */
 export * from "@/middleware/apply_middlewares.ts";
