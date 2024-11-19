@@ -53,9 +53,9 @@
  * Pretch provides a built-in enhancer to apply middlewares on each request
  *
  * ### Validate Status
- * 
+ *
  * Creates a middleware that validates the response status.
- * 
+ *
  * ```ts
  * import { buildFetch } from "@pretch/core";
  * import { applyMiddlewares, validateStatus} from "@pretch/core/middleware";
@@ -74,7 +74,7 @@
  * ```
  *
  * ### Retry
- * 
+ *
  * A middleware that retries a request if it fails.
  *
  * ```ts
@@ -112,9 +112,9 @@
  * ```
  *
  * ### Authorization
- * 
+ *
  * A middleware that adds the given authorization header to the request.
- * 
+ *
  * ```ts
  * import { buildFetch } from "@pretch/core";
  * import { applyMiddlewares, authorization } from "@pretch/core/middleware";
