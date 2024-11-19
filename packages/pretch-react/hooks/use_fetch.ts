@@ -2,21 +2,29 @@ import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { buildFetch, type Enhancer } from "@pretch/core";
 import type { FetchResult } from "@/types.ts";
 
+
 /**
  * A hook that creates a custom fetch function with optional enhancement
  * and tracks the status of the request. Automatically fetches the data
  * when the component mounts.
  *
+ * @template T The type of the data returned by the fetch
  * @param {string | URL} url - The URL to fetch.
- * @param {RequestInit} [options] - The options for the request.
- * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
- * @returns {FetchResult<T>} An object with the `data`, `loading`, and `error` properties
- *   and a `refetch` method.
+ * @param {Object} [options] - The options object.
+ * @param {RequestInit} [options.options] - The options for the request.
+ * @param {Enhancer} [options.enhancer] - An optional function to enhance the fetch behavior.
+ * @returns {FetchResult<T>} An object containing:
+ *   - data: The fetched data or null
+ *   - loading: Whether the request is in progress
+ *   - error: Any error that occurred or null
+ *   - refetch: Function to refetch with optional new URL and options
  */
 export function useFetch<T>(
   url: string | URL,
-  options?: RequestInit,
-  enhancer?: Enhancer,
+  { options, enhancer }: {
+    options?: RequestInit;
+    enhancer?: Enhancer;
+  } = {},
 ): FetchResult<T> {
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
@@ -24,7 +32,9 @@ export function useFetch<T>(
 
   async function fetchData(
     currentUrl: string | URL,
-    currentOptions?: RequestInit,
+    { currentOptions }: {
+      currentOptions?: RequestInit;
+    } = {},
   ) {
     loading.value = true;
     error.value = null;
@@ -42,11 +52,15 @@ export function useFetch<T>(
   }
 
   useSignalEffect(() => {
-    fetchData(url, options);
+    fetchData(url, { currentOptions: options });
   });
 
-  const refetch = (newUrl?: string, newOptions?: RequestInit) =>
-    fetchData(newUrl || url, newOptions || options);
+  const refetch = (
+    { newUrl = url, newOptions = options }: {
+      newUrl?: string | URL;
+      newOptions?: RequestInit;
+    } = {},
+  ) => fetchData(newUrl, { currentOptions: newOptions });
 
   return {
     data: data.value,
