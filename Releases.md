@@ -1,3 +1,20 @@
+### 2024.11.19
+
+#### @pretch/core 0.5.3 (patch)
+
+- docs(core): Wrote a description for middleware module
+
+#### @pretch/preact 0.1.5 (patch)
+
+- fix(preact,react): Exported missing hooks in both packages (useLazyFetch)
+- docs(preact/unstable): Wrote template for useFetch's JSDoc
+- refactor(preact,react): Added missing parameter in both FetchResult type
+
+#### @pretch/react 0.0.4 (patch)
+
+- fix(preact,react): Exported missing hooks in both packages (useLazyFetch)
+- refactor(preact,react): Added missing parameter in both FetchResult type
+
 ### 2024.11.18
 
 #### @pretch/core 0.5.2 (minor)
