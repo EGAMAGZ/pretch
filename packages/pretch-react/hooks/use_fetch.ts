@@ -2,7 +2,6 @@ import { useSignal, useSignalEffect } from "@preact/signals-react";
 import { buildFetch, type Enhancer } from "@pretch/core";
 import type { FetchResult } from "@/types.ts";
 
-
 /**
  * A hook that creates a custom fetch function with optional enhancement
  * and tracks the status of the request. Automatically fetches the data

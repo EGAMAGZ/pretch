@@ -38,7 +38,7 @@ export function useLazyFetch<T>(
       const customFetch = buildFetch(enhancer);
       const response = await customFetch(
         newUrl,
-        newOptions,
+	newOptions,
       );
 
       data.value = (await response.json()) as T;

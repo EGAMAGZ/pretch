@@ -28,6 +28,7 @@ export function useFetch<T>(
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
   const error = useSignal<Error | null>(null);
+  const controller = new AbortController();
 
   async function fetchData(
     currentUrl: string | URL,
@@ -40,11 +41,18 @@ export function useFetch<T>(
 
     try {
       const customFetch = buildFetch(enhancer);
-      const response = await customFetch(currentUrl, currentOptions);
+      const response = await customFetch(currentUrl, {
+        ...currentOptions,
+        signal: controller.signal,
+      });
 
       data.value = (await response.json()) as T;
     } catch (err) {
-      error.value = err as Error;
+      if (err instanceof Error) {
+        if (err.name !== "AbortError") {
+          error.value = err as Error;
+        }
+      }
     } finally {
       loading.value = false;
     }
@@ -54,12 +62,15 @@ export function useFetch<T>(
     fetchData(url, { currentOptions: options });
   });
 
-  const refetch = (
+  const refetch = async (
     { newUrl = url, newOptions = options }: {
       newUrl?: string | URL;
       newOptions?: RequestInit;
     } = {},
-  ) => fetchData(newUrl, { currentOptions: newOptions });
+  ) => {
+    controller.abort();
+    await fetchData(newUrl, { currentOptions: newOptions });
+  };
 
   return {
     data: data.value,
