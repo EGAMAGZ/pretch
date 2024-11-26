@@ -3,20 +3,74 @@ import { buildFetch, type Enhancer } from "@pretch/core";
 import type { FetchResult } from "@/types.ts";
 
 /**
- * A hook that creates a custom fetch function with optional enhancement
- * and tracks the status of the request. Automatically fetches the data
- * when the component mounts.
- *
- * @template T The type of the data returned by the fetch
- * @param {string | URL} url - The URL to fetch.
- * @param {Object} [options] - The options object.
- * @param {RequestInit} [options.options] - The options for the request.
- * @param {Enhancer} [options.enhancer] - An optional function to enhance the fetch behavior.
- * @returns {FetchResult<T>} An object containing:
- *   - data: The fetched data or null
- *   - loading: Whether the request is in progress
- *   - error: Any error that occurred or null
- *   - refetch: Function to refetch with optional new URL and options
+ * A hook that creates a custom fetch function with optional enhancement and 
+ * tracks the status of the request. Automatically fetches the data when the 
+ * component mounts.
+ * 
+ * @description
+ * This hook provides:
+ * - Automatic data fetching on component mount
+ * - Loading and error state management
+ * - Type-safe response handling
+ * - Request enhancement capabilities
+ * - Manual refetch functionality
+ * 
+ * ## Basic Usage
+ * Use the hook directly for simple fetch requests:
+ * ```ts
+ * const { data, loading, error, refetch } = useFetch("https://example.com");
+ * ```
+ * 
+ * ## Request Enhancement
+ * The hook supports request enhancement through enhancer functions for customizing request behavior:
+ * 
+ * 1. Custom enhancers:
+ * ```ts
+ * import type { Enhancer, Handler } from "@pretch/core";
+ * 
+ * function myCustomEnhancer(handler: Handler){
+ *  return (request: Request) => {
+ *    // ...
+ *    return handler(request);
+ *  } 
+ * }
+ * 
+ * const { data } = useFetch("https://example.com", {
+ *   enhancer: myCustomEnhancer
+ * });
+ * ```
+ * 
+ * 2. Built-in middleware:
+ * ```ts
+ * import { applyMiddlewares, authorization, retry } from "@pretch/core/middleware";
+ * 
+ * const { data } = useFetch("https://example.com", {
+ *   enhancer: applyMiddlewares(
+ *     authorization("token", "bearer"),
+ *     retry()
+ *   )
+ * });
+ * ```
+ * 
+ * ## Dynamic Requests
+ * The hook's refetch function supports updating the URL and options:
+ * ```ts
+ * const { refetch } = useFetch("/api/data");
+ * 
+ * // Later:
+ * refetch({ newUrl: "/api/other-data", newOptions: { method: "POST" } });
+ * ```
+ * 
+ * @template T - The expected type of the response data
+ * @param url - The URL to fetch from
+ * @param options - Configuration options
+ * @param options.options - Fetch options for the request
+ * @param options.enhancer - An optional function to enhance the fetch behavior.
+ * @returns {FetchResult<T>} Object containing:
+ *  - data: The parsed response data (type T)
+ *  - loading: Whether the request is in progress
+ *  - error: Error if request failed
+ *  - refetch: Function to manually trigger a new request with optional new URL and new fetch options
  */
 export function useFetch<T>(
   url: string | URL,
@@ -28,7 +82,6 @@ export function useFetch<T>(
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
   const error = useSignal<Error | null>(null);
-  const controller = new AbortController();
 
   async function fetchData(
     currentUrl: string | URL,
@@ -43,15 +96,12 @@ export function useFetch<T>(
       const customFetch = buildFetch(enhancer);
       const response = await customFetch(currentUrl, {
         ...currentOptions,
-        signal: controller.signal,
       });
 
       data.value = (await response.json()) as T;
     } catch (err) {
       if (err instanceof Error) {
-        if (err.name !== "AbortError") {
-          error.value = err as Error;
-        }
+        error.value = err as Error;
       }
     } finally {
       loading.value = false;
@@ -68,7 +118,6 @@ export function useFetch<T>(
       newOptions?: RequestInit;
     } = {},
   ) => {
-    controller.abort();
     await fetchData(newUrl, { currentOptions: newOptions });
   };
 
