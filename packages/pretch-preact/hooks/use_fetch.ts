@@ -62,10 +62,10 @@ import type { FetchResult } from "@/types.ts";
  * ```
  * 
  * @template T - The expected type of the response data
- * @param url - The URL to fetch from
- * @param options - Configuration options
- * @param options.options - Fetch options for the request
- * @param options.enhancer - An optional function to enhance the fetch behavior.
+ * @param {string | URL} url - The URL to fetch from
+ * @param {Object} options - Configuration options
+ * @param {RequestInit} [options.options] - Fetch options for the request
+ * @param {Enhancer} [options.enhancer] - An optional function to enhance the fetch behavior.
  * @returns {FetchResult<T>} Object containing:
  *  - data: The parsed response data (type T)
  *  - loading: Whether the request is in progress
@@ -100,9 +100,7 @@ export function useFetch<T>(
 
       data.value = (await response.json()) as T;
     } catch (err) {
-      if (err instanceof Error) {
         error.value = err as Error;
-      }
     } finally {
       loading.value = false;
     }
