@@ -6,10 +6,10 @@
  * global fetch.
  *
  * ## Features
- * * Zero dependencies
- * * Compatible with all JavaScript runtimes (Node.js, Bun, Deno) and browser environments
- * * Ability to create custom built-in middlewares and enhancers
- * * Built-in middlewares and enhancers
+ * - Zero dependencies
+ * - Custom reusable fetch behaviour
+ * - Compatible with all JavaScript runtimes (Node.js, Bun, Deno) and browser environments
+ * - Built-in middlewares and enhancer with ability to create custom ones
  *
  * ## Usage
  * ```ts
