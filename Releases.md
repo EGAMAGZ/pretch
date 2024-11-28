@@ -1,3 +1,26 @@
+### 2024.11.28
+
+#### @pretch/core 0.5.4 (patch)
+
+- docs(core): Improved JSDoc for middleware's mod.ts
+
+#### @pretch/preact 0.1.6 (patch)
+
+- docs(preact): Modified JSdoc to provide more examples of useLazyFetch hook
+  usage
+- docs(preact): Modified JSdoc to provide more examples of its usage
+- refactor(preact): Changed options in useLazyFetch hook to follow deno's code
+  style in case of optional parameters
+- refactor(preact): Changed options in useFetch hook to follow deno's code style
+  in case of optional parameters
+- chore(preact): Removed useless task defined to generate doc manually
+
+#### @pretch/react 0.0.5 (patch)
+
+- docs(react): Modified JSDoc of both hooks to provide usage examples
+- refactor(react): Changed options in useLazyFetch and useFetch hooks to follow
+  deno's code style in case of optional parameters
+
 ### 2024.11.19
 
 #### @pretch/core 0.5.3 (patch)
