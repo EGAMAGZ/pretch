@@ -9,6 +9,7 @@
 A lightweight and flexible fetch enhancement library that works with vanilla
 JavaScript, React, and Preact.
 
+[![JSR Scope](https://jsr.io/badges/@pretch)](https://jsr.io/@pretch)
 ![GitHub License](https://img.shields.io/github/license/egamagz/pretch)
 ![GitHub Release](https://img.shields.io/github/v/release/egamagz/pretch)
 
