@@ -6,7 +6,8 @@
   </a>
 </div>
 
-A lightweight and flexible fetch enhancement library that works with vanilla JavaScript, React, and Preact.
+A lightweight and flexible fetch enhancement library that works with vanilla
+JavaScript, React, and Preact.
 
 ![GitHub License](https://img.shields.io/github/license/egamagz/pretch)
 ![GitHub Release](https://img.shields.io/github/v/release/egamagz/pretch)
