@@ -2,7 +2,7 @@ name: Linting and type checking
 
 on:
   pull_request:
-    branches: [master, development]
+    branches: [master]
   workflow_dispatch:
 
 permissions:

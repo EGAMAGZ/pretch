@@ -6,24 +6,94 @@ import type { LazyFetchResult } from "@/types.ts";
  * A hook that creates a custom fetch function with optional enhancement
  * and tracks the status of the request. Fetches the data manually.
  *
- * @param {string} url - The URL to fetch.
- * @param {RequestInit} [options] - The options for the request.
- * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
- * @returns {LazyFetchResult<T>} An object with the `data`, `loading`, and `error` properties
- *   and a `fetchData` method.
+ * @description
+ * This hooks provides:
+ * - Loading and error state management
+ * - Type-safe response handling
+ * - Request enhancement capabilities
+ * - Manually do fetching
+ *
+ * ## Basic Usage
+ * Use the hook directly forsimple fetch requests:
+ * ```ts
+ * const { data, loading, error, fetchData } = useLazyFetch("https://example.com");
+ * ```
+ *
+ * ## Request Enhancement
+ * The hook supports request enhancement through enhancer functions for customizing request behavior:
+ *
+ * 1. Custom enhancers:
+ * ```ts
+ * import type {Enhancer, Handler} from "@pretch/core";
+ *
+ * const loggingEnhancer: Enhancer = (handler: Handler) => {
+ *   return async (request: Request) => {
+ *     console.log('Request:', request.url);
+ *     const response = await handler(request);
+ *     console.log('Response:', response.status);
+ *     return response;
+ *   };
+ * };
+ *
+ * const { data, fetchData } = useLazyFetch("https://example.com",{
+ *  enhancer: loggingEnhancer
+ * });
+ *
+ * fetchData();
+ * ```
+ *
+ * 2. Built-in middleware:
+ * ```ts
+ * import { applyMiddlewares, authorization, retry } from "@pretch/core/middleware";
+ *
+ * const { data, fetchData } = useLazyFetch("https://example.com", {
+ *   enhancer: applyMiddlewares(
+ *     authorization("token", "bearer"),
+ *     retry()
+ *   )
+ * });
+ *
+ * fetchData();
+ * ```
+ *
+ * ## Dynamic Requests
+ * ```ts
+ * const { fetchData } = useLazyFetch("/api/data");
+ *
+ * // Later ...
+ * fetchData({
+ *  newUrl: "/api/other-data",
+ *  newOptions: {
+ *    method: "PUT",
+ *    body: JSON.stringify({name: "New name"})
+ *  }
+ * });
+ * ```
+ *
+ * @template T The expected type of the response data
+ * @param {string | URL} url - The URL to fetch.
+ * @param {Object} options - The configuration options.
+ * @param {RequestInit} [options.options] - The options for the request.
+ * @param {Enhancer} [options.enhancer] - An optional function to enhance the fetch behavior.
+ * @returns {LazyFetchResult<T>} An object containing:
+ *   - data: The parsed response data (type T)
+ *   - loading: Whether the request is in progress
+ *   - error: Error if request failed
+ *   - fetchData: Function to fetch data with optional new URL and options in format { newUrl?: string | URL, newOptions?: RequestInit }
  */
 export function useLazyFetch<T>(
-  url: string,
-  options?: RequestInit,
-  enhancer?: Enhancer,
+  url: string | URL,
+  { options, enhancer }: { options?: RequestInit; enhancer?: Enhancer } = {},
 ): LazyFetchResult<T> {
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
   const error = useSignal<Error | null>(null);
 
   async function fetchData(
-    currentUrl?: string | URL,
-    currentOptions?: RequestInit,
+    { newOptions = options, newUrl = url }: {
+      newUrl?: string | URL;
+      newOptions?: RequestInit;
+    } = {},
   ) {
     loading.value = true;
     error.value = null;
@@ -31,8 +101,8 @@ export function useLazyFetch<T>(
     try {
       const customFetch = buildFetch(enhancer);
       const response = await customFetch(
-        currentUrl || url,
-        currentOptions || options,
+        newUrl,
+        newOptions,
       );
 
       data.value = (await response.json()) as T;
