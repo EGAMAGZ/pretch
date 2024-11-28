@@ -1,5 +1,17 @@
 ### 2024.11.28
 
+#### @pretch/preact 0.1.7 (patch)
+
+- fix(preact,react): Fixed typing error to indicate with functions returns a
+  promise
+
+#### @pretch/react 0.0.6 (patch)
+
+- fix(preact,react): Fixed typing error to indicate with functions returns a
+  promise
+
+### 2024.11.28
+
 #### @pretch/core 0.5.4 (patch)
 
 - docs(core): Improved JSDoc for middleware's mod.ts
