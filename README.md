@@ -1,7 +1,17 @@
 # Pretch
 
-A lightweight and flexible fetch enhancement library that works with vanilla
-JavaScript, React, and Preact.
+<div align="center">
+  <a href="https://jsr.io/@pretch">
+    <img src="./docs/images/logo.png" width="200" height="auto" alt="Hono"/>
+  </a>
+</div>
+
+A lightweight and flexible fetch enhancement library that works with vanilla JavaScript, React, and Preact.
+
+![GitHub License](https://img.shields.io/github/license/egamagz/pretch)
+![GitHub Release](https://img.shields.io/github/v/release/egamagz/pretch)
+
+Check the [Documentation](https://jsr.io/@pretch) in JSR
 
 ## Features
 
@@ -328,4 +338,5 @@ MIT License
 
 ## TODO
 
+- Create useQuery hook inspired on @tanstack/react-query and redux query
 - Develop and automatize tests for @pretch/preact and @pretch/react
