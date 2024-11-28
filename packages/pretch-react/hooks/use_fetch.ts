@@ -3,10 +3,10 @@ import { buildFetch, type Enhancer } from "@pretch/core";
 import type { FetchResult } from "@/types.ts";
 
 /**
- * A hook that creates a custom fetch function with optional enhancement and 
- * tracks the status of the request. Automatically fetches the data when the 
+ * A hook that creates a custom fetch function with optional enhancement and
+ * tracks the status of the request. Automatically fetches the data when the
  * component mounts.
- * 
+ *
  * @description
  * This hook provides:
  * - Automatic data fetching on component mount
@@ -14,36 +14,38 @@ import type { FetchResult } from "@/types.ts";
  * - Type-safe response handling
  * - Request enhancement capabilities
  * - Manual refetch functionality
- * 
+ *
  * ## Basic Usage
  * Use the hook directly for simple fetch requests:
  * ```ts
  * const { data, loading, error, refetch } = useFetch("https://example.com");
  * ```
- * 
+ *
  * ## Request Enhancement
  * The hook supports request enhancement through enhancer functions for customizing request behavior:
- * 
+ *
  * 1. Custom enhancers:
  * ```ts
  * import type { Enhancer, Handler } from "@pretch/core";
- * 
- * function myCustomEnhancer(handler: Handler){
- *  return (request: Request) => {
- *    // ...
- *    return handler(request);
- *  } 
- * }
- * 
+ *
+ * const loggingEnhancer: Enhancer = (handler: Handler) => {
+ *   return async (request: Request) => {
+ *     console.log('Request:', request.url);
+ *     const response = await handler(request);
+ *     console.log('Response:', response.status);
+ *     return response;
+ *   };
+ * };
+ *
  * const { data } = useFetch("https://example.com", {
- *   enhancer: myCustomEnhancer
+ *   enhancer: loggingEnhancer
  * });
  * ```
- * 
+ *
  * 2. Built-in middleware:
  * ```ts
  * import { applyMiddlewares, authorization, retry } from "@pretch/core/middleware";
- * 
+ *
  * const { data } = useFetch("https://example.com", {
  *   enhancer: applyMiddlewares(
  *     authorization("token", "bearer"),
@@ -51,16 +53,16 @@ import type { FetchResult } from "@/types.ts";
  *   )
  * });
  * ```
- * 
+ *
  * ## Dynamic Requests
  * The hook's refetch function supports updating the URL and options:
  * ```ts
  * const { refetch } = useFetch("/api/data");
- * 
+ *
  * // Later:
  * refetch({ newUrl: "/api/other-data", newOptions: { method: "POST" } });
  * ```
- * 
+ *
  * @template T - The expected type of the response data
  * @param {string | URL} url - The URL to fetch from
  * @param {Object} options - Configuration options
@@ -100,7 +102,7 @@ export function useFetch<T>(
 
       data.value = (await response.json()) as T;
     } catch (err) {
-        error.value = err as Error;
+      error.value = err as Error;
     } finally {
       loading.value = false;
     }
