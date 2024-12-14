@@ -46,7 +46,7 @@ export type LoggingHandler = {
   onRequest?: (
     data: RequestLogData,
   ) => Promise<void> | void;
-onResponse?: (
+  onResponse?: (
     data: ResponseLogData,
   ) => Promise<void> | void;
   onCatch?: (data: ErrorLogData) => Promise<void> | void;

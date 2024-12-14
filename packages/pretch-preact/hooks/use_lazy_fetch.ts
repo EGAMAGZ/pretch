@@ -16,7 +16,7 @@ import type { LazyFetchResult } from "@/types.ts";
  * ## Basic Usage
  * Use the hook directly forsimple fetch requests:
  * ```ts
- * const { data, loading, error, fetchData } = useLazyFetch("https://example.com");
+ * const { data, loading, error, fetchData } = useLazyFetch({url:"https://example.com"});
  * ```
  *
  * ## Request Enhancement
@@ -35,7 +35,8 @@ import type { LazyFetchResult } from "@/types.ts";
  *   };
  * };
  *
- * const { data, fetchData } = useLazyFetch("https://example.com",{
+ * const { data, fetchData } = useLazyFetch({
+ *  url: "https://example.com",
  *  enhancer: loggingEnhancer
  * });
  *
@@ -46,7 +47,8 @@ import type { LazyFetchResult } from "@/types.ts";
  * ```ts
  * import { applyMiddlewares, authorization, retry } from "@pretch/core/middleware";
  *
- * const { data, fetchData } = useLazyFetch("https://example.com", {
+ * const { data, fetchData } = useLazyFetch({
+ *   url: "https://example.com",
  *   enhancer: applyMiddlewares(
  *     authorization("token", "bearer"),
  *     retry()
@@ -58,7 +60,7 @@ import type { LazyFetchResult } from "@/types.ts";
  *
  * ## Dynamic Requests
  * ```ts
- * const { fetchData } = useLazyFetch("/api/data");
+ * const { fetchData } = useLazyFetch({url:"/api/data"});
  *
  * // Later ...
  * fetchData({
@@ -71,8 +73,8 @@ import type { LazyFetchResult } from "@/types.ts";
  * ```
  *
  * @template T The expected type of the response data
- * @param {string | URL} url - The URL to fetch.
  * @param {Object} options - The configuration options.
+ * @param {string | URL} [options.url] - The URL to fetch.
  * @param {RequestInit} [options.options] - The options for the request.
  * @param {Enhancer} [options.enhancer] - An optional function to enhance the fetch behavior.
  * @returns {LazyFetchResult<T>} An object containing:
@@ -82,8 +84,11 @@ import type { LazyFetchResult } from "@/types.ts";
  *   - fetchData: Function to fetch data with optional new URL and options in format { newUrl?: string | URL, newOptions?: RequestInit }
  */
 export function useLazyFetch<T>(
-  url: string | URL,
-  { options, enhancer }: { options?: RequestInit; enhancer?: Enhancer } = {},
+  { url, options, enhancer }: {
+    url?: string | URL;
+    options?: RequestInit;
+    enhancer?: Enhancer;
+  } = {},
 ): LazyFetchResult<T> {
   const data = useSignal<T | null>(null);
   const loading = useSignal(false);
@@ -97,6 +102,10 @@ export function useLazyFetch<T>(
   ) {
     loading.value = true;
     error.value = null;
+
+    if (!newUrl) {
+      throw new Error("No URL provided");
+    }
 
     try {
       const customFetch = buildFetch(enhancer);
