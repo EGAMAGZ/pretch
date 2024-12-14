@@ -45,3 +45,4 @@ export * from "@/middleware/authorization.ts";
 export * from "@/middleware/default_headers.ts";
 export * from "@/middleware/validate_status.ts";
 export * from "@/middleware/retry.ts";
+export * from "@/middleware/logging.ts";
