@@ -131,6 +131,29 @@ const customFetch = buildFetch(
 );
 ```
 
+### Logging
+
+```ts
+import {buildFetch} from "@pretch/core";
+import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
+
+const customFetch = buildFetch(
+  applyMiddlewares(
+    logging({
+      onRequest: async ({ request }: RequestLogData) => {
+        console.log(`Starting request to ${request.url}`);
+      },
+      onResponse: async ({ response }: ResponseLogData) => {
+        console.log(`Received response with status ${response.status}`);
+      },
+      onCatch: async ({ error }: ErrorLogData) => {
+        console.error(`Request failed:`, error);
+      }
+    })
+  )
+);
+```
+
 ## React integration(@pretch/react) and Preact integration(@pretch/preact)
 
 The React and Preact integration delivers powerful hooks for both automatic and

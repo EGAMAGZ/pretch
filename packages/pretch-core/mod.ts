@@ -54,7 +54,7 @@
  *
  * ### Validate Status
  *
- * Creates a middleware that validates the response status.
+ * A middleware that validates the response status.
  *
  * ```ts
  * import { buildFetch } from "@pretch/core";
@@ -129,6 +129,29 @@
  * 					new URL(request.url).pathname.startsWith("/api/"),
  * 			},
  * 		),
+ *   )
+ * );
+ * ```
+ * ### Logging
+ * A middleware that provides logging capabilities at different stages of request processing. It can be used with static handler or factory function.
+ * 
+ * ```ts
+ * import {buildFetch} from "@pretch/core";
+ * import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ *   applyMiddlewares(
+ *     logging({
+ *       onRequest: async ({ request }: RequestLogData) => {
+ *         console.log(`Starting request to ${request.url}`);
+ *       },
+ *       onResponse: async ({ response }: ResponseLogData) => {
+ *         console.log(`Received response with status ${response.status}`);
+ *       },
+ *       onCatch: async ({ error }: ErrorLogData) => {
+ *         console.error(`Request failed:`, error);
+ *       }
+ *     })
  *   )
  * );
  * ```
