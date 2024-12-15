@@ -134,7 +134,7 @@
  * ```
  * ### Logging
  * A middleware that provides logging capabilities at different stages of request processing. It can be used with static handler or factory function.
- * 
+ *
  * ```ts
  * import {buildFetch} from "@pretch/core";
  * import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";

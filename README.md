@@ -134,8 +134,14 @@ const customFetch = buildFetch(
 ### Logging
 
 ```ts
-import {buildFetch} from "@pretch/core";
-import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
+import { buildFetch } from "@pretch/core";
+import {
+  applyMiddlewares,
+  type ErrorLogData,
+  logging,
+  type RequestLogData,
+  type ResponseLogData,
+} from "@pretch/core/middleware";
 
 const customFetch = buildFetch(
   applyMiddlewares(
@@ -148,9 +154,9 @@ const customFetch = buildFetch(
       },
       onCatch: async ({ error }: ErrorLogData) => {
         console.error(`Request failed:`, error);
-      }
-    })
-  )
+      },
+    }),
+  ),
 );
 ```
 
