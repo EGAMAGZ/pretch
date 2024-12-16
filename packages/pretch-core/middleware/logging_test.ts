@@ -1,10 +1,15 @@
 import { expect } from "@std/expect/expect";
 import { assertSpyCalls, spy, stub } from "@std/testing/mock";
-import { logging, type ErrorLogData, type RequestLogData, type ResponseLogData } from "@/middleware/logging.ts";
+import {
+  type ErrorLogData,
+  logging,
+  type RequestLogData,
+  type ResponseLogData,
+} from "@/middleware/logging.ts";
 
 Deno.test("Logging middleware - should handle successful requests with static handlers", async () => {
   let capturedResponse: Response | null = null;
-  
+
   using _ = stub(
     globalThis,
     "fetch",
@@ -19,7 +24,7 @@ Deno.test("Logging middleware - should handle successful requests with static ha
   );
 
   const onRequestSpy = spy((data: RequestLogData) => {
-    expect(data.request.url).toBe("https://example.com");
+    expect(data.request.url).toBe("https://example.com/");
     expect(data.request.method).toBe("GET");
   });
 
@@ -77,7 +82,7 @@ Deno.test("Logging middleware - should handle failed requests with static handle
 
 Deno.test("Logging middleware - should handle requests with factory handlers", async () => {
   let capturedResponse: Response | null = null;
-  
+
   using _ = stub(
     globalThis,
     "fetch",
@@ -118,7 +123,6 @@ Deno.test("Logging middleware - should work with partial handlers", async () => 
 
   const middleware = logging({
     onRequest: onRequestSpy,
-    // Intentionally omitting onResponse and onCatch
   });
 
   const request = new Request("https://example.com");
@@ -130,15 +134,16 @@ Deno.test("Logging middleware - should work with partial handlers", async () => 
 Deno.test("Logging middleware - should preserve request/response chain", async () => {
   const responseBody = JSON.stringify({ data: "test" });
   const responseHeaders = new Headers({ "Content-Type": "application/json" });
-  
+
   using _ = stub(
     globalThis,
     "fetch",
     // deno-lint-ignore require-await
-    async () => new Response(responseBody, { 
-      status: 200, 
-      headers: responseHeaders 
-    }),
+    async () =>
+      new Response(responseBody, {
+        status: 200,
+        headers: responseHeaders,
+      }),
   );
 
   const middleware = logging({});
