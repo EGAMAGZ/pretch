@@ -64,3 +64,41 @@ Deno.test("Default Headers middleware - should add missing headers when using 'a
     "application/json",
   );
 });
+
+Deno.test("Default headers middleware - Should selectively set default headers based on URL path", () => {
+  let capturedHeaders = new Headers();
+
+  using _ = stub(
+    globalThis,
+    "fetch",
+    // deno-lint-ignore require-await
+    async (input, init) => {
+      capturedHeaders = new Request(input, init).headers;
+
+      return new Response(null);
+    },
+  );
+
+  const middleware = defaultHeaders({
+    "X-Custom-Header": "custom-value",
+  }, {
+    shouldApplyHeaders: (request: Request) =>
+      new URL(request.url).pathname.startsWith("/api/"),
+  });
+
+  const notApiRequest = new Request(
+    "https://example.com",
+  );
+
+  middleware(notApiRequest, fetch);
+
+  expect(capturedHeaders.has("X-Custom-Header")).toEqual(false);
+
+  const apiRequest = new Request(
+    "https://example.com/api/example",
+  );
+
+  middleware(apiRequest, fetch);
+
+  expect(capturedHeaders.get("X-Custom-Header")).toBe("custom-value");
+});
