@@ -28,14 +28,9 @@ Deno.test("Build fetch - should successfully handle async JSON responses", async
     "https://example.com",
   );
 
-  await ctx.step("Status code should indicate success", () => {
-    expect(response.ok).toEqual(true);
-  });
-
-  await ctx.step("Response JSON should match expected Todo", async () => {
-    const body = await response.json() as Todo;
-    expect(body).toEqual(expectedTodo);
-  });
+  expect(response.ok).toEqual(true);
+  const body = await response.json() as Todo;
+  expect(body).toEqual(expectedTodo);
 });
 
 Deno.test("Build fetch - should handle unsuccessful responses appropriately", async () => {
