@@ -90,7 +90,7 @@ function addAuthorizationHeader(
  *
  * @param {string} credentials - The credentials to add to the authorization header.
  * @param {AuthorizationScheme} authScheme - The authorization scheme to use.
- * @param {AuthorizationOptions} options 
+ * @param {AuthorizationOptions} options
  * @param {(request: Request) => boolean} [options.shouldApplyToken] - A function that determines whether to add the authorization header to the given request.
  *   If not provided, the default behavior is to add the authorization header to all requests.
  * @returns {Middleware} A middleware that adds the authorization header to the request.

@@ -16,7 +16,13 @@
  * ### Request Handling
  * - {@link validateStatus} - Validates response status codes with custom error handling
  * - {@link retry} - Implements retry logic for failed requests with configurable delays
- *
+ * 
+ * ### Logging Handling
+ * - {@link logging} - Provides logging capabilities at different stages of request processing
+ * 
+ * ### Proxy Handling
+ * - {@link proxy} - Enables proxying requests through a specified proxy server
+ * 
  * ## Usage Example
  *
  * ```ts
@@ -46,3 +52,4 @@ export * from "@/middleware/default_headers.ts";
 export * from "@/middleware/validate_status.ts";
 export * from "@/middleware/retry.ts";
 export * from "@/middleware/logging.ts";
+export * from "@/middleware/proxy.ts";

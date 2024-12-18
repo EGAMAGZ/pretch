@@ -160,6 +160,25 @@ const customFetch = buildFetch(
 );
 ```
 
+### Proxy
+
+```ts
+import { buildFetch } from "@pretch/core";
+import { applyMiddlewares, proxy } from "@pretch/core/middleware";
+
+const customFetch = buildFetch(
+  applyMiddlewares(
+    proxy(
+      "/api", // Forward all requests starting with /api
+      "https://api.example.com",
+      {
+        pathRewrite: (path: string) => path.replace(/^\/api/, ""), // Remove /api prefix
+      }
+    )
+  )
+);
+```
+
 ## React integration(@pretch/react) and Preact integration(@pretch/preact)
 
 The React and Preact integration delivers powerful hooks for both automatic and
