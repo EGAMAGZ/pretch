@@ -233,9 +233,10 @@ function MyComponent() {
 import { useLazyFetch } from "@pretch/react";
 
 function MyComponent() {
-  const { data, loading, error, fetchData } = useLazyFetch(
-    "https://api.example.com/todos/1",
-  );
+  const { data, loading, error, fetchData } = useLazyFetch({
+    url: "https://api.example.com/todos/1",
+  });
+
   const handleClick = () => {
     fetchData({
       newOptions: {
@@ -337,7 +338,8 @@ function TodoList() {
 }
 
 function CreateTodo() {
-  const {data, fetchData, error, loading} = useLazyFetch("https://api.example.com/todos/", {
+  const {data, fetchData, error, loading} = useLazyFetch({
+    url: "https://api.example.com/todos/",
     enhancer: applyMiddlewares(
       defaultHeaders({
         "Content-Type": "application/json; charset=UTF-8",
