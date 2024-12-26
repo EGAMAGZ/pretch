@@ -1,5 +1,11 @@
 ### 2024.12.26
 
+#### @pretch/core 0.5.6 (patch)
+
+- docs(core): Added missing usage example of proxy middleware in mod.ts
+
+### 2024.12.26
+
 #### @pretch/core 0.5.5 (patch)
 
 - feat(core): Created new middleware, proxy middleware, and updated README
