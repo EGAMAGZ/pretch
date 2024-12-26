@@ -155,6 +155,26 @@
  *   )
  * );
  * ```
+ * 
+ * ### Proxy
+ * A middleware that forwards matching requests to a target URL. It supports path-based filtering and URL rewriting.
+ *
+ * ```ts
+ * import { buildFetch } from "@pretch/core";
+ * import { applyMiddlewares, proxy } from "@pretch/core/middleware";
+ *
+ * const customFetch = buildFetch(
+ *   applyMiddlewares(
+ *     proxy(
+ *       "https://api.example.com", // Target URL to proxy to
+ *       "/api", // Forward all requests starting with /api
+ *       {
+ *         pathRewrite: (path) => path.replace(/^\/api/, ""), // Remove /api prefix
+ *       }
+ *     )
+ *   )
+ * );
+ * ```
  *
  * @module
  */
