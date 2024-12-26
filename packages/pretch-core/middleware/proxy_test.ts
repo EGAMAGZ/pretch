@@ -98,21 +98,27 @@ Deno.test("Proxy middleware - handles multiple path patterns correctly", async (
 
   const middleware = proxy("https://api.target.com", ["/path", "/other-path"]);
 
-  await ctx.step("forwards first matching path pattern to target URL", async () => {
-    const request = new Request("https://original.com/path");
+  await ctx.step(
+    "forwards first matching path pattern to target URL",
+    async () => {
+      const request = new Request("https://original.com/path");
 
-    const _response = await middleware(request, fetch);
+      const _response = await middleware(request, fetch);
 
-    expect(capturedRequest?.url).toBe("https://api.target.com/path");
-  });
+      expect(capturedRequest?.url).toBe("https://api.target.com/path");
+    },
+  );
 
-  await ctx.step("forwards second matching path pattern to target URL", async () => {
-    const request = new Request("https://original.com/other-path");
+  await ctx.step(
+    "forwards second matching path pattern to target URL",
+    async () => {
+      const request = new Request("https://original.com/other-path");
 
-    const _response = await middleware(request, fetch);
+      const _response = await middleware(request, fetch);
 
-    expect(capturedRequest?.url).toBe("https://api.target.com/other-path");
-  });
+      expect(capturedRequest?.url).toBe("https://api.target.com/other-path");
+    },
+  );
 
   await ctx.step("preserves original URL for non-matching paths", async () => {
     const request = new Request("https://original.com/resource");
