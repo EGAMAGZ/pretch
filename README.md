@@ -173,9 +173,9 @@ const customFetch = buildFetch(
       "https://api.example.com",
       {
         pathRewrite: (path: string) => path.replace(/^\/api/, ""), // Remove /api prefix
-      }
-    )
-  )
+      },
+    ),
+  ),
 );
 ```
 

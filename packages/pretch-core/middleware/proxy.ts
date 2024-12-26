@@ -67,15 +67,15 @@ function matches(filter: ProxyFilter, url: URL, request: Request): boolean {
  * );
  * ```
  *
- * @param {ProxyFilter} filter - Determines which requests should be proxied
  * @param {string} target - The base URL to proxy requests to
+ * @param {ProxyFilter} filter - Determines which requests should be proxied
  * @param {ProxyOptions} options - Configuration options for the proxy
  * @param {(pathname: string) => string} [options.pathRewrite] - Optional function to rewrite the pathname before proxying
  * @returns {Middleware} A middleware that proxies matching requests to the target URL
  */
 export function proxy(
-  filter: ProxyFilter,
   target: string,
+  filter: ProxyFilter,
   {
     pathRewrite = (pathname) => pathname,
   }: ProxyOptions = {},
