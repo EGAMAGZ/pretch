@@ -1,3 +1,24 @@
+### 2024.12.26
+
+#### @pretch/core 0.5.5 (patch)
+
+- feat(core): Created new middleware, proxy middleware, and updated README
+- feat(core): Added feature to whether apply default headers based on
+  conditional
+- docs(core): Improve JSDoc description of authorization middleware's parameters
+- docs(core): Added example of loggin middleware to showcase usage
+- style(core): Formatted code
+- refactor(core): Created loggin middleware
+- test(core): Created test for proxy middleware
+
+#### @pretch/preact 0.1.8 (patch)
+
+- refactor(react,preact): Made url parameter optional for useLazyFetch hook
+
+#### @pretch/react 0.0.7 (patch)
+
+- refactor(react,preact): Made url parameter optional for useLazyFetch hook
+
 ### 2024.11.28
 
 #### @pretch/preact 0.1.7 (patch)
