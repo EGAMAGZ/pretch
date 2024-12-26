@@ -131,6 +131,54 @@ const customFetch = buildFetch(
 );
 ```
 
+### Logging
+
+```ts
+import { buildFetch } from "@pretch/core";
+import {
+  applyMiddlewares,
+  type ErrorLogData,
+  logging,
+  type RequestLogData,
+  type ResponseLogData,
+} from "@pretch/core/middleware";
+
+const customFetch = buildFetch(
+  applyMiddlewares(
+    logging({
+      onRequest: async ({ request }: RequestLogData) => {
+        console.log(`Starting request to ${request.url}`);
+      },
+      onResponse: async ({ response }: ResponseLogData) => {
+        console.log(`Received response with status ${response.status}`);
+      },
+      onCatch: async ({ error }: ErrorLogData) => {
+        console.error(`Request failed:`, error);
+      },
+    }),
+  ),
+);
+```
+
+### Proxy
+
+```ts
+import { buildFetch } from "@pretch/core";
+import { applyMiddlewares, proxy } from "@pretch/core/middleware";
+
+const customFetch = buildFetch(
+  applyMiddlewares(
+    proxy(
+      "/api", // Forward all requests starting with /api
+      "https://api.example.com",
+      {
+        pathRewrite: (path: string) => path.replace(/^\/api/, ""), // Remove /api prefix
+      },
+    ),
+  ),
+);
+```
+
 ## React integration(@pretch/react) and Preact integration(@pretch/preact)
 
 The React and Preact integration delivers powerful hooks for both automatic and

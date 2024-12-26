@@ -11,9 +11,12 @@ export type Strategy = "set" | "append";
  * @property {Strategy} [strategy="append"] - The strategy to use when merging the headers.
  *   If "set", the default headers will overwrite any existing headers.
  *   If "append", the default headers will be appended to any existing headers.
+ * @property {(request:Request => boolean)} [shouldApplyHeaders] - A function that determines whether to add the default headers to the given request.
+ *   If not provided, the default behaviour is to add the default headers to all requests using the chosen strategy.
  */
 export interface DefaultHeaderOptions {
   strategy?: Strategy;
+  shouldApplyHeaders?: (request: Request) => boolean;
 }
 
 /**
@@ -65,13 +68,20 @@ const mergeHeaders = (
  * @param {Strategy} [options.strategy="append"] - The strategy to use when merging the headers.
  *   If "set", the default headers will overwrite any existing headers.
  *   If "append", the default headers will be appended to any existing headers.
+ * @param {(request: Request)=>boolean} [options.shouldApplyHeaders] - A function that determines whether to add the default headers to the given request.
+ *   If not provided, the default behaviour is to add the default headers to all requests using the chosen strategy.
  * @returns {Middleware} A middleware that adds the default headers to the request.
  */
 export function defaultHeaders(
   headers: HeadersInit,
-  { strategy = "append" }: DefaultHeaderOptions = {},
+  { strategy = "append", shouldApplyHeaders = (_request: Request) => true }:
+    DefaultHeaderOptions = {},
 ): Middleware {
   return (request: Request, next: Handler) => {
+    if (!shouldApplyHeaders(request)) {
+      return next(request);
+    }
+
     const updatedHeaders = mergeHeaders(
       request.headers,
       headers,

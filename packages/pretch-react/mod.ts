@@ -56,7 +56,7 @@
  *
  * function UpdateTodo(){
  *     const [completed,setCompleted] = useState(false);
- *     const {data, fetchData, error, loading} = useLazyFetch("https://jsonplaceholder.typicode.com/todos/1");
+ *     const {data, fetchData, error, loading} = useLazyFetch({url:"https://jsonplaceholder.typicode.com/todos/1"});
  *
  *     const handleClick = () => {
  *         setCompleted((c:boolean) => !c);
@@ -87,7 +87,8 @@
  * import { applyMiddlewares, authorization, retry } from '@pretch/core/middleware';
  *
  * function SecureComponent() {
- *     const { data } = useLazyFetch('https://api.example.com/secure', {
+ *     const { data } = useLazyFetch({
+ *         url: 'https://api.example.com/secure',
  *         enhancer: applyMiddlewares(
  *             authorization('your-token', 'bearer'),
  *             retry({ maxRetries: 3 })
