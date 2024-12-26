@@ -1,6 +1,6 @@
 {
   "name": "@pretch/preact",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "license": "MIT",
   "imports": {
     "@preact/signals": "npm:@preact/signals@^1.3.0",
