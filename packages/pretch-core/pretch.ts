@@ -54,11 +54,16 @@ type Methods = Record<
  * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
  * {@link retry}, {@link jwt} and {@link defaultHeaders}
  *
- * @param {string | Enhancer | [string, Enhancer]} [options] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch, or both.
+ * @param {string | Enhancer} [data] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch.
+ * @param {Enhancer} [enhancer] - An optional enhancer if you have a base url.
  * @returns {CustomFetch} A custom fetch function that applies the enhancer, if provided.
  */
-export function pretch<T extends string | Enhancer | [string, Enhancer]>(
+export function pretch<
+  T extends string | Enhancer,
+  E extends T extends string ? Enhancer : never,
+>(
   options: T,
+  enhancer?: E,
 ): T extends Enhancer ? CustomFetch
   : Methods {
   let innerFetch: Handler = (request) => fetch(request);
@@ -67,15 +72,15 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
   switch (typeof options) {
     case "string": {
       baseUrl = options;
+      if (
+        enhancer
+      ) {
+        innerFetch = enhancer(innerFetch);
+      }
       break;
     }
     case "function": {
       innerFetch = options(innerFetch);
-      break;
-    }
-    case "object": {
-      baseUrl = options[0];
-      innerFetch = options[1](innerFetch);
       break;
     }
   }
@@ -86,7 +91,7 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
     );
 
   if (typeof options === "function") {
-    return call as ReturnType<typeof pretch<T>>;
+    return call as ReturnType<typeof pretch<T, E>>;
   }
 
   return {
@@ -98,5 +103,5 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
     head: (url = "/", options) => call(url, { ...options, method: "HEAD" }),
     options: (url = "/", options) =>
       call(url, { ...options, method: "OPTIONS" }),
-  } as ReturnType<typeof pretch<T>>;
+  } as ReturnType<typeof pretch<T, E>>;
 }
