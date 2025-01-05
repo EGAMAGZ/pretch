@@ -10,11 +10,11 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  *
  * @example Build a custom fetch with behaviour enhaced through middlewares
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, defaultHeaders} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     defaultHeaders({
  *         "Content-Type": "application/json; charset=UTF-8",
  *       },
@@ -45,14 +45,14 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  * const todoUpdated = await putResponse.json();
  * ```
  *
- * **Note**: Pretch provides the built-in enhancer {@link applyMiddlewares}, which allows to add a list of middleware functions
+ * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows to add a list of middleware functions
  * for handling request modification or defaults, and a couple of built-in middlewares which are: {@link validateStatus},
  * {@link retry}, {@link jwt} and {@link defaultHeaders}
  *
  * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
  * @returns {CustomFetch} A custom fetch function that applies the enhancer, if provided.
  */
-export function buildFetch(enhancer?: Enhancer): CustomFetch {
+export function pretch(enhancer?: Enhancer): CustomFetch {
   let innerFetch: Handler = (request) => fetch(request);
 
   if (enhancer) {

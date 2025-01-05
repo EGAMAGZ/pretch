@@ -71,11 +71,11 @@ function addAuthorizationHeader(
  *
  * @example Usage
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, authorization } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, authorization } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- * 	applyMiddlewares(
+ * const customFetch = pretch(
+ * 	applyMiddleware(
  * 		authorization(
  * 			"123456789abcdef",
  * 			"bearer",

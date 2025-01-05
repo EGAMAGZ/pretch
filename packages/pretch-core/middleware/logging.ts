@@ -66,11 +66,11 @@ export type LoggingHandlerFactory = (data: RequestLogData) => LoggingHandler;
  *
  * Usage with static handler
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     logging({
  *       onRequest: async ({ request }: RequestLogData) => {
  *         console.log(`Starting request to ${request.url}`);
@@ -88,11 +88,11 @@ export type LoggingHandlerFactory = (data: RequestLogData) => LoggingHandler;
  *
  * Usage with factory function
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     logging(
  *       (data: Readonly<RequestLogData>) => ({
  *         onRequest: async ({ request }: RequestLogData) => {

@@ -4,7 +4,7 @@
  * This module provides a powerful middleware system for enhancing fetch behavior through composable functions.
  * It includes both a middleware application utility and several pre-built middleware functions for common use cases.
  *
- * The {@link applyMiddlewares} function that combines multiple middlewares into a single enhancer. The middlewares are
+ * The {@link applyMiddleware} function that combines multiple middlewares into a single enhancer. The middlewares are
  * executed in the order they are provided, allowing for request/response transformation.
  *
  * ## Built-in Middlewares
@@ -26,16 +26,16 @@
  * ## Usage Example
  *
  * ```ts
- * import { buildFetch } from "@pretch/core";
+ * import pretch from "@pretch/core";
  * import {
- *   applyMiddlewares,
+ *   applyMiddleware,
  *   authorization,
  *   defaultHeaders,
  *   validateStatus
  * } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     // Middlewares are executed in order
  *     defaultHeaders({ "Content-Type": "application/json" }),
  *     authorization("token", "bearer"),

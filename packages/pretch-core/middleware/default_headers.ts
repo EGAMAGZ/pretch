@@ -48,11 +48,11 @@ const mergeHeaders = (
  *
  * @example Usage
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, defaultHeaders} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- * 	applyMiddlewares(
+ * const customFetch = pretch(
+ * 	applyMiddleware(
  * 		defaultHeaders({
  *         			"Content-Type": "application/json; charset=UTF-8"
  * 			},
