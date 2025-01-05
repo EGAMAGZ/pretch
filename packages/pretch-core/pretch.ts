@@ -92,7 +92,7 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
     }
   }
 
-  const call: CustomFetch = (url = "/", options) =>
+  const call: CustomFetch = (url, options) =>
     Promise.resolve(
       innerFetch(new Request(new URL(url, baseUrl), options)),
     );
@@ -102,12 +102,13 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
   }
 
   return {
-    get: (url, options) => call(url, { ...options, method: "GET" }),
-    post: (url, options) => call(url, { ...options, method: "POST" }),
-    put: (url, options) => call(url, { ...options, method: "PUT" }),
-    delete: (url, options) => call(url, { ...options, method: "DELETE" }),
-    patch: (url, options) => call(url, { ...options, method: "PATCH" }),
-    head: (url, options) => call(url, { ...options, method: "HEAD" }),
-    options: (url, options) => call(url, { ...options, method: "OPTIONS" }),
+    get: (url = "/", options) => call(url, { ...options, method: "GET" }),
+    post: (url = "/", options) => call(url, { ...options, method: "POST" }),
+    put: (url = "/", options) => call(url, { ...options, method: "PUT" }),
+    delete: (url = "/", options) => call(url, { ...options, method: "DELETE" }),
+    patch: (url = "/", options) => call(url, { ...options, method: "PATCH" }),
+    head: (url = "/", options) => call(url, { ...options, method: "HEAD" }),
+    options: (url = "/", options) =>
+      call(url, { ...options, method: "OPTIONS" }),
   } as ReturnType<typeof pretch<T>>;
 }

@@ -88,6 +88,6 @@ export interface Middleware {
  * @returns {Promise<Response>} A promise that resolves to the response.
  */
 export type CustomFetch = (
-  url?: string | URL,
+  url: string | URL,
   options?: RequestInit,
 ) => Promise<Response>;
