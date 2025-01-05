@@ -108,7 +108,7 @@ export function useLazyFetch<T>(
     }
 
     try {
-      const customFetch = pretch(enhancer);
+      const customFetch = enhancer ? pretch(enhancer) : fetch;
       const response = await customFetch(
         newUrl,
         newOptions,

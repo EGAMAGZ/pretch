@@ -95,7 +95,7 @@ export function useFetch<T>(
     error.value = null;
 
     try {
-      const customFetch = pretch(enhancer);
+      const customFetch = enhancer ? pretch(enhancer) : fetch;
       const response = await customFetch(currentUrl, {
         ...currentOptions,
       });
