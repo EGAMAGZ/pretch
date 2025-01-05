@@ -1,6 +1,6 @@
 ### 2025.01.05
 
-#### @pretch/core 0.5.6 (patch)
+#### @pretch/core 1.0.0 (major)
 
 - BREAKING(core): Allow whether url based custom fetch
 - docs(core): Added missing usage example of proxy middleware in mod.ts
