@@ -38,7 +38,7 @@ type Methods = Record<
  * const createdTodo = await getResponse.json();
  *
  * // The following request will keep the enhanced behaviour of adding default headers
- * const putResponse = await customFetch.put({
+ * const putResponse = await customFetch.put("/", {
  * 	body: JSON.stringify({
  * 			title: "Updated todo",
  * 			body: "Same task",
