@@ -1,3 +1,18 @@
+### 2025.01.05
+
+#### @pretch/core 0.5.6 (patch)
+
+- BREAKING(core): Allow build url based custom fetch or not
+- docs(core): Added missing usage example of proxy middleware in mod.ts
+
+#### @pretch/preact 0.1.9 (patch)
+
+- docs(react,preact): Updated JSDoc to match with pretch/core exports
+
+#### @pretch/react 0.0.8 (patch)
+
+- docs(react,preact): Updated JSDoc to match with pretch/core exports
+
 ### 2024.12.26
 
 #### @pretch/core 0.5.6 (patch)
