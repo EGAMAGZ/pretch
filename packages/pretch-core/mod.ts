@@ -12,6 +12,7 @@
  * - Built-in middleware and enhancer with ability to create custom ones
  *
  * ## Usage
+ *
  * ```ts
  * import pretch from "@pretch/core";
  * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
