@@ -16,21 +16,13 @@ type Methods = Record<
  *
  * In the next example, fetch is enhaced with a middleware that will be automatically add default headers to every request
  *
- * @example Create a fetch that will use a base url
- * ```ts
- * import pretch from "@pretch/core";
- *
- * const api = pretch("https://example.com/api/");
- *
- * const users = await api.get("/users")
- * ```
- *
- * @example Create a custom fetch with behaviour enhaced through middleware
+ * @example Create a custom fetch with behaviour enhaced through middleware and a base URL
  * ```ts
  * import pretch from "@pretch/core";
  * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
  *
  * const customFetch = pretch(
+ *   "https://jsonplaceholder.typicode.com/todos/",
  *   applyMiddleware(
  *     defaultHeaders({
  *         "Content-Type": "application/json; charset=UTF-8",
@@ -41,16 +33,12 @@ type Methods = Record<
  *   ),
  * );
  *
- * const getResponse = await customFetch("https://jsonplaceholder.typicode.com/todos/1",{
- *   method: "GET"
- * });
+ * const getResponse = await customFetch.get("/1");
  *
  * const createdTodo = await getResponse.json();
  *
  * // The following request will keep the enhanced behaviour of adding default headers
- * const putResponse = await customFetch(
- * "https://jsonplaceholder.typicode.com/todos",{
- * 	method: "PUT",
+ * const putResponse = await customFetch.put({
  * 	body: JSON.stringify({
  * 			title: "Updated todo",
  * 			body: "Same task",
