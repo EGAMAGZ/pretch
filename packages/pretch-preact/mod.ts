@@ -15,6 +15,7 @@
  * - Support for request middleware
  *
  * ### Automatic Fetching
+ *
  * ```tsx
  * import { useFetch } from "@pretch/preact";
  * import { useState, useEffect } from "preact/hooks";
