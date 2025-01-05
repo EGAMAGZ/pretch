@@ -1,7 +1,7 @@
-import { buildFetch } from "@/build_fetch.ts";
+import { pretch } from "@/pretch.ts";
 import { expect } from "@std/expect";
 import { stub } from "@std/testing/mock";
-import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
+import { applyMiddleware } from "../middleware/apply_middleware.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
 import { authorization } from "@/middleware/authorization.ts";
@@ -15,7 +15,7 @@ const expectedTodo: Todo = {
   completed: false,
 };
 
-Deno.test("Build fetch - should successfully handle async JSON responses", async (ctx) => {
+Deno.test("Create a fetch - should successfully handle async JSON responses", async () => {
   using _ = stub(
     globalThis,
     "fetch",
@@ -23,17 +23,15 @@ Deno.test("Build fetch - should successfully handle async JSON responses", async
     async () => Response.json(expectedTodo),
   );
 
-  const customFetch = buildFetch();
-  const response = await customFetch(
-    "https://example.com",
-  );
+  const customFetch = pretch("https://example.com");
+  const response = await customFetch.get();
 
   expect(response.ok).toEqual(true);
   const body = await response.json() as Todo;
   expect(body).toEqual(expectedTodo);
 });
 
-Deno.test("Build fetch - should handle unsuccessful responses appropriately", async () => {
+Deno.test("Create a fetch - should handle unsuccessful responses appropriately", async () => {
   using _ = stub(
     globalThis,
     "fetch",
@@ -41,14 +39,14 @@ Deno.test("Build fetch - should handle unsuccessful responses appropriately", as
     async () => new Response(null, { status: 404 }),
   );
 
-  const customFetch = buildFetch();
-  const response = await customFetch("https://example.com");
+  const customFetch = pretch("https://example.com");
+  const response = await customFetch.get();
 
   expect(response.ok).toEqual(false);
   await response.body?.cancel();
 });
 
-Deno.test("Build fetch - should correctly apply multiple middleware configurations", () => {
+Deno.test("Create a fetch - should correctly apply multiple middleware configurations", () => {
   let capturedHeaders = new Headers();
   using _ = stub(
     globalThis,
@@ -61,7 +59,7 @@ Deno.test("Build fetch - should correctly apply multiple middleware configuratio
     },
   );
 
-  const customFetch = buildFetch(applyMiddlewares(
+  const customFetch = pretch(applyMiddleware(
     validateStatus({
       validate: (status) => status === 404,
     }),

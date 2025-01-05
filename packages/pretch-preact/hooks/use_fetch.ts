@@ -1,5 +1,5 @@
 import { useSignal, useSignalEffect } from "@preact/signals";
-import { buildFetch, type Enhancer } from "@pretch/core";
+import pretch, { type Enhancer } from "@pretch/core";
 import type { FetchResult } from "@/types.ts";
 
 /**
@@ -44,10 +44,10 @@ import type { FetchResult } from "@/types.ts";
  *
  * 2. Built-in middlewares:
  * ```ts
- * import { applyMiddlewares, authorization, retry } from "@pretch/core/middleware";
+ * import { applyMiddleware, authorization, retry } from "@pretch/core/middleware";
  *
  * const { data } = useFetch("https://example.com", {
- *   enhancer: applyMiddlewares(
+ *   enhancer: applyMiddleware(
  *     authorization("token", "bearer"),
  *     retry()
  *   )
@@ -95,7 +95,7 @@ export function useFetch<T>(
     error.value = null;
 
     try {
-      const customFetch = buildFetch(enhancer);
+      const customFetch = enhancer ? pretch(enhancer) : fetch;
       const response = await customFetch(currentUrl, {
         ...currentOptions,
       });

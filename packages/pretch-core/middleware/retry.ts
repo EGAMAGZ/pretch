@@ -22,11 +22,11 @@ export interface RetryOptions {
  *
  * @example Usage
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, retry} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, retry} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     retry({
  *       maxRetries: 2,      // Retry up to 2 times
  *       delay: 1_500,       // Wait 1.5 seconds between retries

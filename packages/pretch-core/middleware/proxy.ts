@@ -51,11 +51,11 @@ function matches(filter: ProxyFilter, url: URL, request: Request): boolean {
  *
  * @example Usage
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, proxy } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, proxy } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     proxy(
  *       "/api", // Forward all requests starting with /api
  *       "https://api.example.com",

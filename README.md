@@ -41,11 +41,11 @@ Check the [Documentation](https://jsr.io/@pretch) in JSR
 ### Core (Vanilla Javascript) - @pretch/core
 
 ```typescript
-import { buildFetch } from "@pretch/core";
-import { applyMiddlewares, defaultHeaders } from "@pretch/core/middleware";
+import pretch from "@pretch/core";
+import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     defaultHeaders({
       "Content-Type": "application/json; charset=UTF-8",
     }),
@@ -63,11 +63,11 @@ Pretch provides a built-in enhancer to apply middlewares on each request
 ### Validate Status
 
 ```ts
-import { buildFetch } from "@pretch/core";
-import { applyMiddlewares, validateStatus } from "@pretch/core/middleware";
+import pretch from "@pretch/core";
+import { applyMiddleware, validateStatus } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     validateStatus({
       validate: (status) => 200 <= status && status <= 399,
       errorFactory: (status, request, response) =>
@@ -81,11 +81,11 @@ const customFetch = buildFetch(
 ### Retry
 
 ```ts
-import { buildFetch } from "@pretch/core";
-import { applyMiddlewares, retry } from "@pretch/core/middleware";
+import pretch from "@pretch/core";
+import { applyMiddleware, retry } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     retry({
       maxRetries: 2,
       delay: 1_500,
@@ -97,11 +97,11 @@ const customFetch = buildFetch(
 ### Default Headers
 
 ```ts
-import { buildFetch } from "@pretch/core";
-import { applyMiddlewares, defaultHeaders } from "@pretch/core/middleware";
+import pretch from "@pretch/core";
+import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     defaultHeaders({
       "Content-Type": "application/json; charset=UTF-8",
     }, {
@@ -114,11 +114,11 @@ const customFetch = buildFetch(
 ### Authorization
 
 ```ts
-import { buildFetch } from "@pretch/core";
-import { applyMiddlewares, authorization } from "@pretch/core/middleware";
+import pretch from "@pretch/core";
+import { applyMiddleware, authorization } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     authorization(
       "123456789abcdef",
       "bearer",
@@ -134,17 +134,17 @@ const customFetch = buildFetch(
 ### Logging
 
 ```ts
-import { buildFetch } from "@pretch/core";
+import pretch from "@pretch/core";
 import {
-  applyMiddlewares,
+  applyMiddleware,
   type ErrorLogData,
   logging,
   type RequestLogData,
   type ResponseLogData,
 } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     logging({
       onRequest: async ({ request }: RequestLogData) => {
         console.log(`Starting request to ${request.url}`);
@@ -163,11 +163,11 @@ const customFetch = buildFetch(
 ### Proxy
 
 ```ts
-import { buildFetch } from "@pretch/core";
-import { applyMiddlewares, proxy } from "@pretch/core/middleware";
+import pretch from "@pretch/core";
+import { applyMiddleware, proxy } from "@pretch/core/middleware";
 
-const customFetch = buildFetch(
-  applyMiddlewares(
+const customFetch = pretch(
+  applyMiddleware(
     proxy(
       "/api", // Forward all requests starting with /api
       "https://api.example.com",
@@ -298,7 +298,7 @@ apply middlewares on each request, including built-in middlewares.
 
 ```tsx
 import {
-  applyMiddlewares,
+  applyMiddleware,
   authorization,
   defaultHeaders,
   retry,
@@ -310,7 +310,7 @@ function TodoList() {
   const { data, loading, error, refetch } = useFetch(
     "https://api.example.com/todos/",
     {
-      enhancer: applyMiddlewares(
+      enhancer: applyMiddleware(
         retry({
           maxRetries: 2,
           delay: 500,
@@ -340,7 +340,7 @@ function TodoList() {
 function CreateTodo() {
   const {data, fetchData, error, loading} = useLazyFetch({
     url: "https://api.example.com/todos/",
-    enhancer: applyMiddlewares(
+    enhancer: applyMiddleware(
       defaultHeaders({
         "Content-Type": "application/json; charset=UTF-8",
       }),

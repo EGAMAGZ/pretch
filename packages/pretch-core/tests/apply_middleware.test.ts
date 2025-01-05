@@ -1,13 +1,13 @@
 import { expect } from "@std/expect/expect";
 import type { Enhancer } from "@/types.ts";
-import { applyMiddlewares } from "@/middleware/apply_middlewares.ts";
+import { applyMiddleware } from "../middleware/apply_middleware.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
 import { authorization } from "@/middleware/authorization.ts";
 import { retry } from "@/middleware/retry.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 import { stub } from "@std/testing/mock";
 
-Deno.test("applyMiddlewares - should correctly chain multiple middleware configurations", async () => {
+Deno.test("applyMiddleware - should correctly chain multiple middleware configurations", async () => {
   let capturedHeaders = new Headers();
 
   using _ = stub(
@@ -21,7 +21,7 @@ Deno.test("applyMiddlewares - should correctly chain multiple middleware configu
     },
   );
 
-  const enhancer: Enhancer = applyMiddlewares(
+  const enhancer: Enhancer = applyMiddleware(
     defaultHeaders(
       {
         "Content-Type": "application/json",

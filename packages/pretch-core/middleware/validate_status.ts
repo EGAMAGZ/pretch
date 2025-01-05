@@ -27,11 +27,11 @@ export interface ValidateStatusOptions {
  *
  * @example Usage
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, validateStatus} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, validateStatus} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     validateStatus({
  *       validate: (status) => 200 <= status && status <= 399,
  *       errorFactory: (status, request, response) => new Error(`Error. Status code: ${status}`),

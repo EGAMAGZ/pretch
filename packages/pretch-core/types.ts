@@ -81,7 +81,7 @@ export interface Middleware {
 }
 
 /**
- * A custom fetch function returned by {@link buildFetch}
+ * A custom fetch function returned by {@link pretch}
  *
  * @param {string | URL} url - The URL to fetch.
  * @param {RequestInit} [options] - The options for the request.

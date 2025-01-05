@@ -9,15 +9,15 @@
  * - Zero dependencies
  * - Custom reusable fetch behaviour
  * - Compatible with all JavaScript runtimes (Node.js, Bun, Deno) and browser environments
- * - Built-in middlewares and enhancer with ability to create custom ones
+ * - Built-in middleware and enhancer with ability to create custom ones
  *
  * ## Usage
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, defaultHeaders} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     defaultHeaders({
  *         "Content-Type": "application/json; charset=UTF-8",
  *       },
@@ -48,20 +48,20 @@
  * const todoUpdated = await putResponse.json();
  * ```
  *
- * ## Built-in middlewares
+ * ## Built-in middleware
  *
- * Pretch provides a built-in enhancer to apply middlewares on each request
+ * Pretch provides a built-in enhancer to apply middleware on each request
  *
  * ### Validate Status
  *
  * A middleware that validates the response status.
  *
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, validateStatus} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, validateStatus} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- * 	applyMiddlewares(
+ * const customFetch = pretch(
+ * 	applyMiddleware(
  * 		validateStatus(
  * 			{
  *              validate:(status) => 200 <= status && status <= 399,
@@ -78,11 +78,11 @@
  * A middleware that retries a request if it fails.
  *
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, retry} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, retry} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- * 	applyMiddlewares(
+ * const customFetch = pretch(
+ * 	applyMiddleware(
  * 		retry({
  * 			maxRetries: 2,
  * 			delay: 1_500,
@@ -96,11 +96,11 @@
  * A middleware that adds default headers to the given request.
  *
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, defaultHeaders} from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- * 	applyMiddlewares(
+ * const customFetch = pretch(
+ * 	applyMiddleware(
  * 		defaultHeaders({
  *         			"Content-Type": "application/json; charset=UTF-8"
  * 			},
@@ -116,11 +116,11 @@
  * A middleware that adds the given authorization header to the request.
  *
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, authorization } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, authorization } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- * applyMiddlewares(
+ * const customFetch = pretch(
+ * applyMiddleware(
  * 		authorization(
  * 			"123456789abcdef",
  * 			"bearer",
@@ -136,11 +136,11 @@
  * A middleware that provides logging capabilities at different stages of request processing. It can be used with static handler or factory function.
  *
  * ```ts
- * import {buildFetch} from "@pretch/core";
- * import { applyMiddlewares, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     logging({
  *       onRequest: async ({ request }: RequestLogData) => {
  *         console.log(`Starting request to ${request.url}`);
@@ -155,16 +155,16 @@
  *   )
  * );
  * ```
- * 
+ *
  * ### Proxy
  * A middleware that forwards matching requests to a target URL. It supports path-based filtering and URL rewriting.
  *
  * ```ts
- * import { buildFetch } from "@pretch/core";
- * import { applyMiddlewares, proxy } from "@pretch/core/middleware";
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, proxy } from "@pretch/core/middleware";
  *
- * const customFetch = buildFetch(
- *   applyMiddlewares(
+ * const customFetch = pretch(
+ *   applyMiddleware(
  *     proxy(
  *       "https://api.example.com", // Target URL to proxy to
  *       "/api", // Forward all requests starting with /api
@@ -180,4 +180,5 @@
  */
 
 export * from "@/types.ts";
-export { buildFetch } from "@/build_fetch.ts";
+import { pretch } from "@/pretch.ts";
+export default pretch;
