@@ -136,7 +136,7 @@
  * A middleware that provides logging capabilities at different stages of request processing. It can be used with static handler or factory function.
  *
  * ```ts
- * import {buildFetch} from "@pretch/core";
+ * import pretch from "@pretch/core";
  * import { applyMiddleware, logging, type RequestLogData, type ResponseLogData,type ErrorLogData } from "@pretch/core/middleware";
  *
  * const customFetch = pretch(

@@ -81,13 +81,13 @@ export interface Middleware {
 }
 
 /**
- * A custom fetch function returned by {@link buildFetch}
+ * A custom fetch function returned by {@link pretch}
  *
  * @param {string | URL} url - The URL to fetch.
  * @param {RequestInit} [options] - The options for the request.
  * @returns {Promise<Response>} A promise that resolves to the response.
  */
 export type CustomFetch = (
-  url: string | URL,
+  url?: string | URL,
   options?: RequestInit,
 ) => Promise<Response>;
