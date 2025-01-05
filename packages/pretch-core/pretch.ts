@@ -16,21 +16,13 @@ type Methods = Record<
  *
  * In the next example, fetch is enhaced with a middleware that will be automatically add default headers to every request
  *
- * @example Create a fetch that will use a base url
- * ```ts
- * import pretch from "@pretch/core";
- *
- * const api = pretch("https://example.com/api/");
- *
- * const users = await api.get("/users")
- * ```
- *
- * @example Create a custom fetch with behaviour enhaced through middleware
+ * @example Create a custom fetch with behaviour enhaced through middleware and a base URL
  * ```ts
  * import pretch from "@pretch/core";
  * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
  *
  * const customFetch = pretch(
+ *   "https://jsonplaceholder.typicode.com/todos/",
  *   applyMiddleware(
  *     defaultHeaders({
  *         "Content-Type": "application/json; charset=UTF-8",
@@ -41,16 +33,12 @@ type Methods = Record<
  *   ),
  * );
  *
- * const getResponse = await customFetch("https://jsonplaceholder.typicode.com/todos/1",{
- *   method: "GET"
- * });
+ * const getResponse = await customFetch.get("/1");
  *
  * const createdTodo = await getResponse.json();
  *
  * // The following request will keep the enhanced behaviour of adding default headers
- * const putResponse = await customFetch(
- * "https://jsonplaceholder.typicode.com/todos",{
- * 	method: "PUT",
+ * const putResponse = await customFetch.put("/1",{
  * 	body: JSON.stringify({
  * 			title: "Updated todo",
  * 			body: "Same task",
@@ -66,11 +54,16 @@ type Methods = Record<
  * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
  * {@link retry}, {@link jwt} and {@link defaultHeaders}
  *
- * @param {string | Enhancer | [string, Enhancer]} [options] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch, or both.
+ * @param {string | Enhancer} [data] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch.
+ * @param {Enhancer} [enhancer] - An optional enhancer if you have a base url.
  * @returns {CustomFetch} A custom fetch function that applies the enhancer, if provided.
  */
-export function pretch<T extends string | Enhancer | [string, Enhancer]>(
+export function pretch<
+  T extends string | Enhancer,
+  E extends T extends string ? Enhancer : never,
+>(
   options: T,
+  enhancer?: E,
 ): T extends Enhancer ? CustomFetch
   : Methods {
   let innerFetch: Handler = (request) => fetch(request);
@@ -79,15 +72,15 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
   switch (typeof options) {
     case "string": {
       baseUrl = options;
+      if (
+        enhancer
+      ) {
+        innerFetch = enhancer(innerFetch);
+      }
       break;
     }
     case "function": {
       innerFetch = options(innerFetch);
-      break;
-    }
-    case "object": {
-      baseUrl = options[0];
-      innerFetch = options[1](innerFetch);
       break;
     }
   }
@@ -98,7 +91,7 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
     );
 
   if (typeof options === "function") {
-    return call as ReturnType<typeof pretch<T>>;
+    return call as ReturnType<typeof pretch<T, E>>;
   }
 
   return {
@@ -110,5 +103,5 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
     head: (url = "/", options) => call(url, { ...options, method: "HEAD" }),
     options: (url = "/", options) =>
       call(url, { ...options, method: "OPTIONS" }),
-  } as ReturnType<typeof pretch<T>>;
+  } as ReturnType<typeof pretch<T, E>>;
 }
