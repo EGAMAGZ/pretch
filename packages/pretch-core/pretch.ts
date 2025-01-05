@@ -74,7 +74,7 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
 ): T extends Enhancer ? CustomFetch
   : Methods {
   let innerFetch: Handler = (request) => fetch(request);
-  let baseUrl: string = "";
+  let baseUrl: string;
 
   switch (typeof options) {
     case "string": {
@@ -94,7 +94,7 @@ export function pretch<T extends string | Enhancer | [string, Enhancer]>(
 
   const call: CustomFetch = (url = "/", options) =>
     Promise.resolve(
-      innerFetch(new Request(baseUrl ? new URL(url, baseUrl) : url, options)),
+      innerFetch(new Request(new URL(url, baseUrl), options)),
     );
 
   if (typeof options === "function") {
