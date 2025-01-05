@@ -1,4 +1,4 @@
-import { buildFetch, type Enhancer } from "@pretch/core";
+import pretch, { type Enhancer } from "@pretch/core";
 import { useSignal } from "@preact/signals-react";
 import type { LazyFetchResult } from "@/types.ts";
 
@@ -45,11 +45,11 @@ import type { LazyFetchResult } from "@/types.ts";
  *
  * 2. Built-in middleware:
  * ```ts
- * import { applyMiddlewares, authorization, retry } from "@pretch/core/middleware";
+ * import { applyMiddleware, authorization, retry } from "@pretch/core/middleware";
  *
  * const { data, fetchData } = useLazyFetch({
  *   url: "https://example.com",
- *   enhancer: applyMiddlewares(
+ *   enhancer: applyMiddleware(
  *     authorization("token", "bearer"),
  *     retry()
  *   )
@@ -108,7 +108,7 @@ export function useLazyFetch<T>(
     }
 
     try {
-      const customFetch = buildFetch(enhancer);
+      const customFetch = pretch(enhancer);
       const response = await customFetch(
         newUrl,
         newOptions,

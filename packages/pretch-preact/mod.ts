@@ -84,12 +84,12 @@
  * ### Using Middleware
  * ```tsx
  * import { useLazyFetch } from '@pretch/preact';
- * import { applyMiddlewares, authorization, retry } from '@pretch/core/middleware';
+ * import { applyMiddleware, authorization, retry } from '@pretch/core/middleware';
  *
  * function SecureComponent() {
  *   const { data } = useLazyFetch({
  *     url: "https://api.example.com/secure",
- *     enhancer: applyMiddlewares(
+ *     enhancer: applyMiddleware(
  *       authorization('your-token', 'bearer'),
  *       retry({ maxRetries: 3 })
  *     ),
