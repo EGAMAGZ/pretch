@@ -2,7 +2,7 @@ import { expect } from "@std/expect/expect";
 import { assertSpyCalls, stub } from "@std/testing/mock";
 import { FakeTime } from "@std/testing/time";
 import { retry } from "@/middleware/retry.ts";
-import { applyMiddleware } from "@/middleware/apply_middlewares.ts";
+import { applyMiddleware } from "../middleware/apply_middleware.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 
 Deno.test("Retry middleware - should validate maxRetries is greater than zero", () => {

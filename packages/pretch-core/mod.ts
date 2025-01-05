@@ -9,7 +9,7 @@
  * - Zero dependencies
  * - Custom reusable fetch behaviour
  * - Compatible with all JavaScript runtimes (Node.js, Bun, Deno) and browser environments
- * - Built-in middlewares and enhancer with ability to create custom ones
+ * - Built-in middleware and enhancer with ability to create custom ones
  *
  * ## Usage
  * ```ts
@@ -48,9 +48,9 @@
  * const todoUpdated = await putResponse.json();
  * ```
  *
- * ## Built-in middlewares
+ * ## Built-in middleware
  *
- * Pretch provides a built-in enhancer to apply middlewares on each request
+ * Pretch provides a built-in enhancer to apply middleware on each request
  *
  * ### Validate Status
  *

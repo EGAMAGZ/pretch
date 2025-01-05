@@ -1,7 +1,7 @@
 import { pretch } from "@/pretch.ts";
 import { expect } from "@std/expect";
 import { stub } from "@std/testing/mock";
-import { applyMiddleware } from "@/middleware/apply_middlewares.ts";
+import { applyMiddleware } from "../middleware/apply_middleware.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
 import { authorization } from "@/middleware/authorization.ts";
@@ -15,7 +15,7 @@ const expectedTodo: Todo = {
   completed: false,
 };
 
-Deno.test("Build fetch - should successfully handle async JSON responses", async (ctx) => {
+Deno.test("Build fetch - should successfully handle async JSON responses", async () => {
   using _ = stub(
     globalThis,
     "fetch",

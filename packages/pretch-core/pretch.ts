@@ -8,7 +8,7 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  *
  * In the next example, fetch is enhaced with a middleware that will be automatically add default headers to every request
  *
- * @example Build a custom fetch with behaviour enhaced through middlewares
+ * @example Build a custom fetch with behaviour enhaced through middleware
  * ```ts
  * import pretch from "@pretch/core";
  * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
@@ -46,7 +46,7 @@ import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
  * ```
  *
  * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows to add a list of middleware functions
- * for handling request modification or defaults, and a couple of built-in middlewares which are: {@link validateStatus},
+ * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
  * {@link retry}, {@link jwt} and {@link defaultHeaders}
  *
  * @param {Enhancer} [enhancer] - An optional function to enhance the fetch behavior.
