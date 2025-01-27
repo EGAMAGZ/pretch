@@ -99,3 +99,16 @@ export type CustomFetch = (
  * ```
  */
 export type Pathname = `/${string}`;
+
+/**
+ * Represents a collection of HTTP method functions for making requests.
+ * Each method function accepts an optional URL path and request options,
+ * returning a Promise that resolves to a Response object.
+ */
+export type Methods = Record<
+  "get" | "post" | "put" | "delete" | "patch" | "head" | "options",
+  (
+    url?: Pathname,
+    options?: Omit<RequestInit, "method">,
+  ) => Promise<Response>
+>;

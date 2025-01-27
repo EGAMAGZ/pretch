@@ -1,3 +1,5 @@
+import type { Pathname, Methods } from "@pretch/core";
+
 /**
  * Represents the result of a fetch operation.
  *
@@ -33,3 +35,31 @@ export type LazyFetchResult<T> = {
     options?: { newUrl?: string | URL; newOptions?: RequestInit },
   ) => Promise<void>;
 };
+
+/**
+ * Represents the result of a query operation.
+ *
+ * @template T The type of the data returned by the query.
+ * @property {T | null} data - The data returned by the query, or null if not available.
+ * @property {Error | null} error - The error encountered during the query, or null if none.
+ * @property {boolean} loading - Indicates whether the query operation is in progress.
+ */
+export type QueryResult<T> = {
+  data: T | null;
+  error: Error | null;
+  loading: boolean;
+};
+
+/**
+ * A record of HTTP method functions that perform queries.
+ *
+ * @template T The type of the data returned by the query methods.
+ * @property {keyof Methods} [method] - Each HTTP method (GET, POST, etc.) is a function that:
+ *   @param {Pathname} [url] - The URL to send the request to.
+ *   @param {Omit<RequestInfo, "method">} [options] - Request options excluding the method.
+ *   @returns {Promise<QueryResult<T>>} A promise that resolves to the query result.
+ */
+export type QueryMethods<T> = Record<
+  keyof Methods,
+  (url?: Pathname, options?: Omit<RequestInfo, "method">) => Promise<QueryResult<T>>
+>

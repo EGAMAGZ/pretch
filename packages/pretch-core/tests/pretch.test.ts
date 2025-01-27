@@ -16,7 +16,7 @@ const expectedTodo: Todo = {
   completed: false,
 };
 
-Deno.test("Create a fetch - should successfully handle async JSON responses", async () => {
+Deno.test("Pretch - should successfully handle async JSON responses", async () => {
   using _ = stub(
     globalThis,
     "fetch",
@@ -33,7 +33,7 @@ Deno.test("Create a fetch - should successfully handle async JSON responses", as
   expect(body).toEqual(expectedTodo);
 });
 
-Deno.test("Create a fetch - should handle unsuccessful responses appropriately", async () => {
+Deno.test("Pretch - should handle unsuccessful responses appropriately", async () => {
   using _ = stub(
     globalThis,
     "fetch",
