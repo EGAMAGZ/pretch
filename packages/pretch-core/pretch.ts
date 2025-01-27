@@ -1,12 +1,28 @@
-import type { CustomFetch, Enhancer, Handler } from "@/types.ts";
+import type { CustomFetch, Enhancer, Handler, Pathname } from "@/types.ts";
 
-type Methods = Record<
+/**
+ * Represents a collection of HTTP method functions for making requests.
+ * Each method function accepts an optional URL path and request options,
+ * returning a Promise that resolves to a Response object.
+ */
+export type Methods = Record<
   "get" | "post" | "put" | "delete" | "patch" | "head" | "options",
   (
-    url?: string | URL,
+    url?: Pathname,
     options?: Omit<RequestInit, "method">,
   ) => Promise<Response>
 >;
+
+function joinPathname(path: Pathname, baseUrl: string | URL): URL {
+  const url = baseUrl instanceof URL ? baseUrl : new URL(baseUrl);
+
+  const basePath = url.pathname.replace(/\/+$/, "");
+  const normalizedPath = path.replace(/^\/+/, "");
+
+  const newPathname = `${basePath}/${normalizedPath}`;
+
+  return new URL(newPathname, baseUrl);
+}
 
 /**
  * Creates a custom fetch function with optional enhancement. This enhancement changes the default fetch function's behaviour
@@ -54,44 +70,43 @@ type Methods = Record<
  * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
  * {@link retry}, {@link jwt} and {@link defaultHeaders}
  *
- * @param {string | Enhancer} [data] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch.
+ * @param {string | URL | Enhancer} [baseUrl] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch.
  * @param {Enhancer} [enhancer] - An optional enhancer if you have a base url.
- * @returns {CustomFetch} A custom fetch function that applies the enhancer, if provided.
+ * @returns {Methods | CustomFetch} A custom fetch function that applies the enhancer, if provided.
  */
-export function pretch<
-  T extends string | Enhancer,
-  E extends T extends string ? Enhancer : never,
->(
-  options: T,
-  enhancer?: E,
-): T extends Enhancer ? CustomFetch
-  : Methods {
-  let innerFetch: Handler = (request) => fetch(request);
-  let baseUrl: string;
 
-  switch (typeof options) {
-    case "string": {
-      baseUrl = options;
-      if (
-        enhancer
-      ) {
-        innerFetch = enhancer(innerFetch);
-      }
-      break;
+export function pretch(baseUrl: string | URL, enhancer?: Enhancer): Methods;
+
+export function pretch(enhancer: Enhancer): CustomFetch;
+
+export function pretch(
+  optionsOrBaseUrl: string | URL | Enhancer,
+  enhancer?: Enhancer,
+): Methods | CustomFetch {
+  let innerFetch: Handler = (request) => fetch(request);
+  let baseUrl: string | URL | undefined;
+
+  if (typeof optionsOrBaseUrl === "string" || optionsOrBaseUrl instanceof URL) {
+    baseUrl = optionsOrBaseUrl;
+    if (enhancer) {
+      innerFetch = enhancer(innerFetch);
     }
-    case "function": {
-      innerFetch = options(innerFetch);
-      break;
-    }
+  } else {
+    innerFetch = optionsOrBaseUrl(innerFetch);
   }
 
   const call: CustomFetch = (url, options) =>
     Promise.resolve(
-      innerFetch(new Request(new URL(url, baseUrl), options)),
+      innerFetch(
+        new Request(
+          baseUrl ? joinPathname(url as Pathname, baseUrl) : url,
+          options,
+        ),
+      ),
     );
 
-  if (typeof options === "function") {
-    return call as ReturnType<typeof pretch<T, E>>;
+  if (typeof optionsOrBaseUrl === "function") {
+    return call;
   }
 
   return {
@@ -103,5 +118,5 @@ export function pretch<
     head: (url = "/", options) => call(url, { ...options, method: "HEAD" }),
     options: (url = "/", options) =>
       call(url, { ...options, method: "OPTIONS" }),
-  } as ReturnType<typeof pretch<T, E>>;
+  };
 }
