@@ -30,7 +30,9 @@ Deno.test("Logging middleware - should handle successful requests with static ha
 
   const onResponseSpy = spy((data: ResponseLogData) => {
     expect(data.response.status).toEqual(200);
-    expect(data.response.headers.get("Content-Type")).toEqual("application/json");
+    expect(data.response.headers.get("Content-Type")).toEqual(
+      "application/json",
+    );
   });
 
   const onCatchSpy = spy(() => {});

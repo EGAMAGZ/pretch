@@ -5,6 +5,7 @@ import { applyMiddleware } from "@/middleware/apply_middleware.ts";
 import { validateStatus } from "@/middleware/validate_status.ts";
 import { defaultHeaders } from "@/middleware/default_headers.ts";
 import { authorization } from "@/middleware/authorization.ts";
+import type { Handler } from "@/types.ts";
 
 type Todo = { userId: number; id: number; title: string; completed: boolean };
 
@@ -45,7 +46,7 @@ Deno.test("Create a fetch - should handle unsuccessful responses appropriately",
   expect(response.ok).toEqual(false);
   await response.body?.cancel();
 });
-Deno.test("Create a fetch - should correctly apply multiple middleware configurations", () => {
+Deno.test("Pretch - should correctly apply multiple middleware configurations", () => {
   let capturedHeaders = new Headers();
 
   using _ = stub(
@@ -90,7 +91,7 @@ Deno.test("Create a fetch - should correctly apply multiple middleware configura
   expect(response).resolves.not.toThrow();
 });
 
-Deno.test("Pretch - Perform queries to a based URL", async (ctx) => {
+Deno.test("Pretch - should handle all HTTP methods with proper URL construction and body handling", async (ctx) => {
   const DEFAULT_BODY = {
     title: "Hello, World!",
   };
@@ -116,41 +117,85 @@ Deno.test("Pretch - Perform queries to a based URL", async (ctx) => {
 
   const customFetch = pretch("https://example.com/api/task");
 
-  await ctx.step("GET method", async () => {
-    const response = await customFetch.get("/1");
+  await ctx.step(
+    "GET - should append path to base URL and return default body",
+    async () => {
+      const response = await customFetch.get("/1");
 
-    expect(capturedMethod).toEqual("GET");
-    expect(capturedPathname).toEqual("/api/task/1");
-    expect(await response.json()).toEqual(DEFAULT_BODY);
-  });
+      expect(capturedMethod).toEqual("GET");
+      expect(capturedPathname).toEqual("/api/task/1");
+      expect(await response.json()).toEqual(DEFAULT_BODY);
+    },
+  );
 
-  await ctx.step("POST method", async () => {
-    const expectedBody = { title: "New title" };
-    const response = await customFetch.post("/", {
-      body: JSON.stringify(expectedBody),
-    });
+  await ctx.step(
+    "POST - should send JSON body and construct proper endpoint URL",
+    async () => {
+      const expectedBody = { title: "New title" };
+      const response = await customFetch.post("/", {
+        body: JSON.stringify(expectedBody),
+      });
 
-    expect(capturedMethod).toEqual("POST");
-    expect(capturedPathname).toEqual("/api/task/");
-    expect(await response.json()).toEqual(expectedBody);
-  });
+      expect(capturedMethod).toEqual("POST");
+      expect(capturedPathname).toEqual("/api/task/");
+      expect(await response.json()).toEqual(expectedBody);
+    },
+  );
 
-  await ctx.step("PUT method", async () => {
-    const expectedBody = { title: "New title" };
-    const response = await customFetch.put("/1", {
-      body: JSON.stringify(expectedBody),
-    });
+  await ctx.step(
+    "PUT - should update resource with JSON body at specific URL",
+    async () => {
+      const expectedBody = { title: "New title" };
+      const response = await customFetch.put("/1", {
+        body: JSON.stringify(expectedBody),
+      });
 
-    expect(capturedMethod).toEqual("PUT");
-    expect(capturedPathname).toEqual("/api/task/1");
-    expect(await response.json()).toEqual(expectedBody);
-  });
+      expect(capturedMethod).toEqual("PUT");
+      expect(capturedPathname).toEqual("/api/task/1");
+      expect(await response.json()).toEqual(expectedBody);
+    },
+  );
 
-  await ctx.step("DELETE method", async () => {
-    const response = await customFetch.delete("/1");
+  await ctx.step(
+    "DELETE - should remove resource at specific URL",
+    async () => {
+      const response = await customFetch.delete("/1");
 
-    expect(capturedMethod).toEqual("DELETE");
-    expect(capturedPathname).toEqual("/api/task/1");
-    expect(await response.json()).toEqual(DEFAULT_BODY);
-  });
+      expect(capturedMethod).toEqual("DELETE");
+      expect(capturedPathname).toEqual("/api/task/1");
+      expect(await response.json()).toEqual(DEFAULT_BODY);
+    },
+  );
+});
+
+Deno.test("Pretch - should allow middleware to enhance request headers", async () => {
+  const authHeaderEnhancer = (handler: Handler) => (request: Request) =>
+    handler(
+      new Request(request, {
+        headers: {
+          ...request.headers,
+          "X-Custom-Header": "value",
+        },
+      }),
+    );
+
+  let capturedHeaders = new Headers();
+
+  using _ = stub(
+    globalThis,
+    "fetch",
+    // deno-lint-ignore require-await
+    async (info, _init) => {
+      const { headers } = info as Request;
+      capturedHeaders = headers;
+      return new Response(null);
+    },
+  );
+
+  const customFetch = pretch("https://example.com/api/", authHeaderEnhancer);
+
+  await customFetch.get("/1");
+
+  expect(capturedHeaders.has("X-Custom-Header")).toEqual(true);
+  expect(capturedHeaders.get("X-Custom-Header")).toEqual("value");
 });

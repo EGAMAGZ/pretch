@@ -15,7 +15,7 @@ export type Methods = Record<
 
 /**
  * Joins a pathname with a base URL, handling path normalization.
- * 
+ *
  * @param {Pathname} path - The path to join with the base URL. Leading slashes will be removed.
  * @param {string | URL} baseUrl - The base URL to join the path with. Can be a URL string or URL object.
  * @returns {URL} A new URL object with the combined path.
