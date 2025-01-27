@@ -23,8 +23,8 @@ Deno.test("Proxy middleware - forwards request to target URL", async (ctx) => {
     });
     const response = await middleware(request, fetch);
 
-    expect(capturedRequest?.url).toBe("https://api.target.com/path");
-    expect(capturedRequest?.redirect).toBe("manual");
+    expect(capturedRequest?.url).toEqual("https://api.target.com/path");
+    expect(capturedRequest?.redirect).toEqual("manual");
 
     const headerObj = Object.fromEntries(capturedRequest?.headers ?? []);
     expect(headerObj).toMatchObject({
@@ -33,8 +33,8 @@ Deno.test("Proxy middleware - forwards request to target URL", async (ctx) => {
       "authorization": "Bearer token123",
     });
 
-    expect(response.status).toBe(200);
-    expect(await response.text()).toBe("proxied response");
+    expect(response.status).toEqual(200);
+    expect(await response.text()).toEqual("proxied response");
   });
 
   await ctx.step("skips non-matching paths", async () => {
@@ -47,7 +47,7 @@ Deno.test("Proxy middleware - forwards request to target URL", async (ctx) => {
     });
     const response = await middleware(request, fetch);
 
-    expect(capturedRequest?.url).toBe("https://original.com/other-path");
+    expect(capturedRequest?.url).toEqual("https://original.com/other-path");
 
     const headerObj = Object.fromEntries(capturedRequest?.headers ?? []);
     expect(headerObj).toMatchObject({
@@ -55,8 +55,8 @@ Deno.test("Proxy middleware - forwards request to target URL", async (ctx) => {
       "authorization": "Bearer token123",
     });
 
-    expect(response.status).toBe(200);
-    expect(await response.text()).toBe("proxied response");
+    expect(response.status).toEqual(200);
+    expect(await response.text()).toEqual("proxied response");
   });
 });
 
@@ -78,10 +78,10 @@ Deno.test("Proxy middleware - applies path rewrite", async () => {
 
   const response = await middleware(request, fetch);
 
-  expect(capturedRequest!.url).toBe("https://api.target.com/v1/resources");
+  expect(capturedRequest!.url).toEqual("https://api.target.com/v1/resources");
 
-  expect(response.status).toBe(200);
-  expect(await response.text()).toBe("proxied response");
+  expect(response.status).toEqual(200);
+  expect(await response.text()).toEqual("proxied response");
 });
 
 Deno.test("Proxy middleware - handles multiple path patterns correctly", async (ctx) => {
@@ -105,7 +105,7 @@ Deno.test("Proxy middleware - handles multiple path patterns correctly", async (
 
       const _response = await middleware(request, fetch);
 
-      expect(capturedRequest?.url).toBe("https://api.target.com/path");
+      expect(capturedRequest?.url).toEqual("https://api.target.com/path");
     },
   );
 
@@ -116,7 +116,7 @@ Deno.test("Proxy middleware - handles multiple path patterns correctly", async (
 
       const _response = await middleware(request, fetch);
 
-      expect(capturedRequest?.url).toBe("https://api.target.com/other-path");
+      expect(capturedRequest?.url).toEqual("https://api.target.com/other-path");
     },
   );
 
@@ -125,6 +125,6 @@ Deno.test("Proxy middleware - handles multiple path patterns correctly", async (
 
     const _response = await middleware(request, fetch);
 
-    expect(capturedRequest?.url).toBe("https://original.com/resource");
+    expect(capturedRequest?.url).toEqual("https://original.com/resource");
   });
 });

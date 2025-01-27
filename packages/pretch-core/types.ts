@@ -4,9 +4,7 @@
  * @param {Request} request - The request.
  * @returns {Response} The response.
  */
-export interface Handler {
-  (request: Request): Response | Promise<Response>;
-}
+export type Handler = (request: Request) => Response | Promise<Response>;
 
 /**
  * An enhancer function that takes a handler and returns a new handler.
@@ -34,9 +32,7 @@ export interface Handler {
  * @param {Handler} handler - The handler to enhance.
  * @returns {Handler} The enhanced handler.
  */
-export interface Enhancer {
-  (handler: Handler): Handler;
-}
+export type Enhancer = (handler: Handler) => Handler;
 
 /**
  * A middleware function to enhacne fetch behaviour.
@@ -76,9 +72,10 @@ export interface Enhancer {
  * @param {Handler} next - The next handler in the chain.
  * @returns {Response | Promise<Response>} The response.
  */
-export interface Middleware {
-  (request: Request, next: Handler): Response | Promise<Response>;
-}
+export type Middleware = (
+  request: Request,
+  next: Handler,
+) => Response | Promise<Response>;
 
 /**
  * A custom fetch function returned by {@link pretch}
@@ -91,3 +88,14 @@ export type CustomFetch = (
   url: string | URL,
   options?: RequestInit,
 ) => Promise<Response>;
+
+/**
+ * Represents a URL pathname that always starts with a forward slash.
+ *
+ * @example
+ * ```ts
+ * const validPathname: Pathname = '/users';
+ * const validNestedPathname: Pathname = '/users/123/profile';
+ * ```
+ */
+export type Pathname = `/${string}`;
