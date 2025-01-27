@@ -100,5 +100,5 @@ Deno.test("Default headers middleware - Should selectively set default headers b
 
   middleware(apiRequest, fetch);
 
-  expect(capturedHeaders.get("X-Custom-Header")).toBe("custom-value");
+  expect(capturedHeaders.get("X-Custom-Header")).toEqual("custom-value");
 });

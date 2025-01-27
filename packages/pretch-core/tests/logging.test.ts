@@ -24,13 +24,13 @@ Deno.test("Logging middleware - should handle successful requests with static ha
   );
 
   const onRequestSpy = spy((data: RequestLogData) => {
-    expect(data.request.url).toBe("https://example.com/");
-    expect(data.request.method).toBe("GET");
+    expect(data.request.url).toEqual("https://example.com/");
+    expect(data.request.method).toEqual("GET");
   });
 
   const onResponseSpy = spy((data: ResponseLogData) => {
-    expect(data.response.status).toBe(200);
-    expect(data.response.headers.get("Content-Type")).toBe("application/json");
+    expect(data.response.status).toEqual(200);
+    expect(data.response.headers.get("Content-Type")).toEqual("application/json");
   });
 
   const onCatchSpy = spy(() => {});
@@ -63,7 +63,7 @@ Deno.test("Logging middleware - should handle failed requests with static handle
   const onRequestSpy = spy(() => {});
   const onResponseSpy = spy(() => {});
   const onCatchSpy = spy((data: ErrorLogData) => {
-    expect(data.error.message).toBe("Network error");
+    expect(data.error.message).toEqual("Network error");
   });
 
   const middleware = logging({
@@ -152,5 +152,5 @@ Deno.test("Logging middleware - should preserve request/response chain", async (
   const response = await middleware(request, fetch);
 
   expect(await response.json()).toEqual({ data: "test" });
-  expect(response.headers.get("Content-Type")).toBe("application/json");
+  expect(response.headers.get("Content-Type")).toEqual("application/json");
 });
