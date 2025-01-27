@@ -37,7 +37,7 @@ function joinPathname(path: Pathname, baseUrl: string | URL): URL {
  * with the behaviour defined by the configured enhancer. The custom fetch can be reused for multiple requests. Each request will
  * apply the same enhancer behavior.
  *
- * In the next example, fetch is enhaced with a middleware that will be automatically add default headers to every request
+ * In the nexts examples, fetch is enhaced with a middleware that will be automatically add default headers to every request
  *
  * @example Create a custom fetch with behaviour enhaced through middleware and a base URL
  * ```ts
@@ -71,6 +71,31 @@ function joinPathname(path: Pathname, baseUrl: string | URL): URL {
  * );
  *
  * const todoUpdated = await putResponse.json();
+ * ```
+ *
+ * @example Create a custom fetch with behaviour enhaced through middleware to query different urls
+ * ```ts
+ * import pretch from "@pretch/core";
+ * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
+ *
+ * const customFetch = pretch(
+ *   applyMiddleware(
+ *     defaultHeaders({
+ *         "Content-Type": "application/json; charset=UTF-8",
+ *       },
+ *      {
+ *       strategy: "append",
+ *     }),
+ *   ),
+ * );
+ *
+ * const firstResponse = await customFetch("https://example.com/api/task");
+ *
+ * const todo = await firstResponse.json();
+ *
+ * const secondResponse = await customFetch("https://otherexample.com/api/auth/sing-in");
+ *
+ * const user = await secondResponse.json();
  * ```
  *
  * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows to add a list of middleware functions
