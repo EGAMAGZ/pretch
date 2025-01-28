@@ -40,21 +40,21 @@ Check the [Documentation](https://jsr.io/@pretch) in JSR
 
 ### Core (Vanilla Javascript) - @pretch/core
 
-In the nexts examples, fetch is enhaced with a middleware that will be automatically add default headers to every request
+In the nexts examples, fetch is enhaced with a middleware that will be
+automatically add default headers to every request
 
 Create a custom fetch with behaviour enhaced through middleware and a base URL
 
 ```ts
 import pretch from "@pretch/core";
-import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
+import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
 
 const customFetch = pretch(
   "https://jsonplaceholder.typicode.com/todos/",
   applyMiddleware(
     defaultHeaders({
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-      {
+      "Content-Type": "application/json; charset=UTF-8",
+    }, {
       strategy: "append",
     }),
   ),
@@ -65,30 +65,29 @@ const getResponse = await customFetch.get("/1");
 const createdTodo = await getResponse.json();
 
 // The following request will keep the enhanced behaviour of adding default headers
-const putResponse = await customFetch.put("/1",{
+const putResponse = await customFetch.put("/1", {
   body: JSON.stringify({
-      title: "Updated todo",
-      body: "Same task",
-      userId: 1,
-    }),
-  },
-);
+    title: "Updated todo",
+    body: "Same task",
+    userId: 1,
+  }),
+});
 
 const todoUpdated = await putResponse.json();
 ```
 
-Create a custom fetch with behaviour enhaced through middleware to query different urls
+Create a custom fetch with behaviour enhaced through middleware to query
+different urls
 
 ```ts
 import pretch from "@pretch/core";
-import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
+import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
 
 const customFetch = pretch(
   applyMiddleware(
     defaultHeaders({
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-     {
+      "Content-Type": "application/json; charset=UTF-8",
+    }, {
       strategy: "append",
     }),
   ),
@@ -98,7 +97,9 @@ const firstResponse = await customFetch("https://example.com/api/task");
 
 const todo = await firstResponse.json();
 
-const secondResponse = await customFetch("https://otherexample.com/api/auth/sing-in");
+const secondResponse = await customFetch(
+  "https://otherexample.com/api/auth/sing-in",
+);
 
 const user = await secondResponse.json();
 ```
@@ -305,7 +306,9 @@ function MyComponent() {
 
 ### Fetching with `useQuery`
 
-A hook that provides a set of type-safe HTTP method functions (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS) for making requests to a base URL. It includes built-in state management using signals to track loading states and errors.
+A hook that provides a set of type-safe HTTP method functions (GET, POST, PUT,
+PATCH, DELETE, HEAD, OPTIONS) for making requests to a base URL. It includes
+built-in state management using signals to track loading states and errors.
 
 ```tsx
 import { useQuery } from "@pretch/react";
@@ -321,12 +324,12 @@ function TodoExample() {
 
   const handleFetch = async () => {
     const { data, loading, error } = await get("/todos/1");
-    
+
     if (error) {
       console.error("Failed to fetch:", error);
       return;
     }
-    
+
     if (data) {
       console.log("Todo:", data.title);
     }
@@ -336,8 +339,8 @@ function TodoExample() {
     const { data, error } = await post("/todos", {
       body: JSON.stringify({
         title: "New Todo",
-        completed: false
-      })
+        completed: false,
+      }),
     });
 
     if (data) {
@@ -354,13 +357,15 @@ function TodoExample() {
 }
 ```
 
-The hook provides all standard HTTP methods (`get`, `post`, `put`, `patch`, `delete`, `head`, `options`) that return a promise containing:
+The hook provides all standard HTTP methods (`get`, `post`, `put`, `patch`,
+`delete`, `head`, `options`) that return a promise containing:
 
 - `data`: The parsed response data
 - `loading`: Boolean indicating if request is in progress
 - `error`: Error object if request failed (or null)
 
-Each method supports URL parameters and request options, with full TypeScript support for response types.
+Each method supports URL parameters and request options, with full TypeScript
+support for response types.
 
 ### Enhanced the fetching of `useFetch`, `useLazyFetch` and `useQuery`
 
