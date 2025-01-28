@@ -503,4 +503,4 @@ MIT License
 ## TODO
 
 - [x] Create useQuery hook inspired on @tanstack/react-query and redux query
-- [] Develop and automatize tests for @pretch/preact and @pretch/react
+- [ ] Develop and automatize tests for @pretch/preact and @pretch/react
