@@ -40,20 +40,67 @@ Check the [Documentation](https://jsr.io/@pretch) in JSR
 
 ### Core (Vanilla Javascript) - @pretch/core
 
-```typescript
+In the nexts examples, fetch is enhaced with a middleware that will be automatically add default headers to every request
+
+Create a custom fetch with behaviour enhaced through middleware and a base URL
+
+```ts
 import pretch from "@pretch/core";
-import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
+import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
+
+const customFetch = pretch(
+  "https://jsonplaceholder.typicode.com/todos/",
+  applyMiddleware(
+    defaultHeaders({
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+      {
+      strategy: "append",
+    }),
+  ),
+);
+
+const getResponse = await customFetch.get("/1");
+
+const createdTodo = await getResponse.json();
+
+// The following request will keep the enhanced behaviour of adding default headers
+const putResponse = await customFetch.put("/1",{
+  body: JSON.stringify({
+      title: "Updated todo",
+      body: "Same task",
+      userId: 1,
+    }),
+  },
+);
+
+const todoUpdated = await putResponse.json();
+```
+
+Create a custom fetch with behaviour enhaced through middleware to query different urls
+
+```ts
+import pretch from "@pretch/core";
+import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
 
 const customFetch = pretch(
   applyMiddleware(
     defaultHeaders({
-      "Content-Type": "application/json; charset=UTF-8",
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+     {
+      strategy: "append",
     }),
   ),
 );
-// Use your enhanced fetch
-const response = await customFetch("https://api.example.com/todos/1");
-const data = await response.json();
+
+const firstResponse = await customFetch("https://example.com/api/task");
+
+const todo = await firstResponse.json();
+
+const secondResponse = await customFetch("https://otherexample.com/api/auth/sing-in");
+
+const user = await secondResponse.json();
 ```
 
 ## Built-in middlewares
@@ -256,7 +303,66 @@ function MyComponent() {
 }
 ```
 
-### Enhanced the fetching of `useFetch` and `useLazyFetch`
+### Fetching with `useQuery`
+
+A hook that provides a set of type-safe HTTP method functions (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS) for making requests to a base URL. It includes built-in state management using signals to track loading states and errors.
+
+```tsx
+import { useQuery } from "@pretch/react";
+
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+function TodoExample() {
+  const { get, post } = useQuery<Todo>("https://api.example.com");
+
+  const handleFetch = async () => {
+    const { data, loading, error } = await get("/todos/1");
+    
+    if (error) {
+      console.error("Failed to fetch:", error);
+      return;
+    }
+    
+    if (data) {
+      console.log("Todo:", data.title);
+    }
+  };
+
+  const handleCreate = async () => {
+    const { data, error } = await post("/todos", {
+      body: JSON.stringify({
+        title: "New Todo",
+        completed: false
+      })
+    });
+
+    if (data) {
+      console.log("Created todo:", data);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleFetch}>Fetch Todo</button>
+      <button onClick={handleCreate}>Create Todo</button>
+    </div>
+  );
+}
+```
+
+The hook provides all standard HTTP methods (`get`, `post`, `put`, `patch`, `delete`, `head`, `options`) that return a promise containing:
+
+- `data`: The parsed response data
+- `loading`: Boolean indicating if request is in progress
+- `error`: Error object if request failed (or null)
+
+Each method supports URL parameters and request options, with full TypeScript support for response types.
+
+### Enhanced the fetching of `useFetch`, `useLazyFetch` and `useQuery`
 
 The hook supports request enhancement through enhancer functions for customizing
 request behavior:
@@ -266,6 +372,7 @@ behavior before it is sent.
 
 ```tsx
 import type { Enhancer, Handler } from "@pretch/core";
+import { useFetch } from "@pretch/react";
 
 function authHeaderEnhancer(handler: Handler) {
   return async (request: Request) => {
@@ -304,7 +411,7 @@ import {
   retry,
 } from "@pretch/core";
 
-import { useFetch, useLazyFetch } from "@precth/react";
+import { useFetch, useLazyFetch, useQuery } from "@precth/react";
 
 function TodoList() {
   const { data, loading, error, refetch } = useFetch(
@@ -390,5 +497,5 @@ MIT License
 
 ## TODO
 
-- Create useQuery hook inspired on @tanstack/react-query and redux query
-- Develop and automatize tests for @pretch/preact and @pretch/react
+- [x] Create useQuery hook inspired on @tanstack/react-query and redux query
+- [] Develop and automatize tests for @pretch/preact and @pretch/react
