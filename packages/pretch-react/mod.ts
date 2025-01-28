@@ -60,7 +60,7 @@
  *     const {data, fetchData, error, loading} = useLazyFetch({url:"https://jsonplaceholder.typicode.com/todos/1"});
  *
  *     const handleClick = () => {
- *         setCompleted((c:boolean) => !c);
+ *         setCompleted((c: boolean) => !c);
  *
  *         fetchData({
  *             newOptions:{
@@ -80,6 +80,33 @@
  * }
  * ```
  *
+ * ### Query-based Fetching
+ * ```tsx
+ * import { useQuery } from "@pretch/react";
+ *
+ * type User = {name: string};
+ *
+ * function UserManager() {
+ *     const query = useQuery<User>("https://api.example.com");
+ *
+ *     const handleGetUser = async (id: string) => {
+ *         const { data, loading, error } = await query.get(`/users/${id}`);
+ *         if (loading) return <div>Loading...</div>;
+ *         if (error) return <div>Error: {error.message}</div>;
+ *         return <div>User: {data?.name}</div>;
+ *     };
+ *
+ *     const handleCreateUser = async (userData: User) => {
+ *         const { data } = await query.post<User>("/users", {
+ *             body: JSON.stringify(userData)
+ *         });
+ *         // Handle the response
+ *     };
+ *
+ *     return <div></div>;
+ * }
+ * ```
+ *
  * ## Advanced Usage
  *
  * ### Using Middleware
@@ -88,15 +115,15 @@
  * import { applyMiddleware, authorization, retry } from '@pretch/core/middleware';
  *
  * function SecureComponent() {
- *     const { data } = useLazyFetch({
- *         url: 'https://api.example.com/secure',
- *         enhancer: applyMiddleware(
- *             authorization('your-token', 'bearer'),
- *             retry({ maxRetries: 3 })
- *         ),
- *     });
+ *   const { data } = useLazyFetch({
+ *     url: "https://api.example.com/secure",
+ *     enhancer: applyMiddleware(
+ *       authorization('your-token', 'bearer'),
+ *       retry({ maxRetries: 3 })
+ *     ),
+ *   });
  *
- *     return <div>render data: {JSON.stringify(data)}</div>;
+ *   return <div>render data: {JSON.stringify(data)}</div>;
  * }
  * ```
  *
@@ -106,26 +133,26 @@
  * import type { Enhancer, Handler } from '@pretch/core';
  *
  * const loggingEnhancer: Enhancer = (handler: Handler) => {
- *     return async (request: Request) => {
- *         console.log('Request:', request.url);
- *         const response = await handler(request);
- *         console.log('Response:', response.status);
- *         return response;
- *     };
+ *   return async (request: Request) => {
+ *     console.log('Request:', request.url);
+ *     const response = await handler(request);
+ *     console.log('Response:', response.status);
+ *     return response;
+ *   };
  * };
  *
  * function LoggedComponent() {
- *     const { data } = useFetch('https://api.example.com', {
- *         enhancer: loggingEnhancer
- *     });
+ *   const { data } = useFetch('https://api.example.com', {
+ *     enhancer: loggingEnhancer
+ *   });
  *
- *     return <div>render data: {JSON.stringify(data)}</div>;
+ *   return <div>render data: {JSON.stringify(data)}</div>;
  * }
  * ```
  *
  * ## API Reference
  *
- * The package exports two main hooks:
+ * The package exports three main hooks:
  *
  * ### useFetch<T>
  * Creates a fetch hook that automatically executes on component mount.
@@ -135,8 +162,13 @@
  * Creates a fetch hook that only executes when manually triggered.
  * {@link useLazyFetch}
  *
+ * ### useQuery<T>
+ * Creates a set of HTTP method functions (GET, POST, PUT, etc.) with status tracking.
+ * {@link useQuery}
+ *
  * @module
  */
 export { useFetch } from "@/hooks/use_fetch.ts";
 export { useLazyFetch } from "@/hooks/use_lazy_fetch.ts";
+export { useQuery } from "@/hooks/use_query.ts";
 export * from "@/types.ts";
