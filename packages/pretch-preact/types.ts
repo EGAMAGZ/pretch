@@ -1,4 +1,4 @@
-import type { Pathname, Methods } from "@pretch/core";
+import type { Methods, Pathname } from "@pretch/core";
 
 /**
  * Represents the result of a fetch operation.
@@ -51,15 +51,18 @@ export type QueryResult<T> = {
 };
 
 /**
- * A record of HTTP method functions that perform queries.
+ * Represents a collection of HTTP method-specific query functions.
  *
- * @template T The type of the data returned by the query methods.
- * @property {keyof Methods} [method] - Each HTTP method (GET, POST, etc.) is a function that:
- *   @param {Pathname} [url] - The URL to send the request to.
- *   @param {Omit<RequestInfo, "method">} [options] - Request options excluding the method.
- *   @returns {Promise<QueryResult<T>>} A promise that resolves to the query result.
+ * @template T The default type for the response data across all methods. Defaults to unknown.
+ * @property {Function} [method] For each HTTP method (GET, POST, etc.), provides a function that:
+ * @param {Pathname} [url] - The URL path to send the request to
+ * @param {Omit<RequestInit, "method">} [options] - Fetch options excluding the method property
+ * @returns {Promise<QueryResult<R>>} A promise that resolves to a QueryResult containing the response data
+ * @template R The specific return type for an individual query, defaults to T if not specified
  */
-export type QueryMethods<T> = Record<
-  keyof Methods,
-  (url?: Pathname, options?: Omit<RequestInfo, "method">) => Promise<QueryResult<T>>
->
+export type QueryMethods<T = unknown> = {
+  [K in keyof Methods]: <R = T>(
+    url?: Pathname,
+    options?: Omit<RequestInit, "method">,
+  ) => Promise<QueryResult<R>>;
+};
