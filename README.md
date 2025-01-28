@@ -320,10 +320,10 @@ interface Todo {
 }
 
 function TodoExample() {
-  const { get, post } = useQuery<Todo>("https://api.example.com");
+  const { get, post } = useQuery("https://api.example.com");
 
   const handleFetch = async () => {
-    const { data, loading, error } = await get("/todos/1");
+    const { data, loading, error } = await get<Todo>("/todos/1");
 
     if (error) {
       console.error("Failed to fetch:", error);
@@ -336,7 +336,7 @@ function TodoExample() {
   };
 
   const handleCreate = async () => {
-    const { data, error } = await post("/todos", {
+    const { data, error } = await post<Todo>("/todos", {
       body: JSON.stringify({
         title: "New Todo",
         completed: false,
