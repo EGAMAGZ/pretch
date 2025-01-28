@@ -1,3 +1,31 @@
+### 2025.01.28
+
+#### @pretch/core 1.1.0 (minor)
+
+- feat(preact, core): Added useQuery hook for type-safe and reactive HTTP
+  requests to a base URL
+- fix(core): url passed as an argument in methods functions overrides base url's
+  pathname
+- docs(core): Wrote example for pretch when it doesn't have a baseUrl
+- docs(core): Wrote missing JSDoc for joinPathname
+- docs(core): Combine documentation for pretch()
+- docs(core): Merged commit for docs
+- docs(core): Fixed missing argument, pathname
+- style(core): Formatted code
+- test(core): Wrote test to ensure enhancer is applied to method functions
+- test(core): use .toEqual() instead of .toBe()
+
+#### @pretch/preact 0.1.10 (patch)
+
+- feat(preact, core): Added useQuery hook for type-safe and reactive HTTP
+  requests to a base URL
+- docs(preact): Update documentation for useQuery hook and improve type
+  definitions
+
+#### @pretch/react 0.0.9 (patch)
+
+- feat(react): Add useQuery hook to mod.ts and update type definitions
+
 ### 2025.01.05
 
 #### @pretch/core 1.0.0 (major)
