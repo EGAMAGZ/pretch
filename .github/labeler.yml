@@ -1,0 +1,11 @@
+core:
+  - changed-files:
+      - any-glob-to-any-file: core/**
+
+preact:
+  - changed-files:
+      - any-glob-to-any-file: preact/**
+
+react:
+  - changed-files:
+      - any-glob-to-any-file: react/**

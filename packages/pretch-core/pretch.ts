@@ -1,17 +1,10 @@
-import type { CustomFetch, Enhancer, Handler, Pathname } from "@/types.ts";
-
-/**
- * Represents a collection of HTTP method functions for making requests.
- * Each method function accepts an optional URL path and request options,
- * returning a Promise that resolves to a Response object.
- */
-export type Methods = Record<
-  "get" | "post" | "put" | "delete" | "patch" | "head" | "options",
-  (
-    url?: Pathname,
-    options?: Omit<RequestInit, "method">,
-  ) => Promise<Response>
->;
+import type {
+  CustomFetch,
+  Enhancer,
+  Handler,
+  Methods,
+  Pathname,
+} from "@/types.ts";
 
 /**
  * Joins a pathname with a base URL, handling path normalization.
@@ -22,12 +15,9 @@ export type Methods = Record<
  */
 function joinPathname(path: Pathname, baseUrl: string | URL): URL {
   const url = baseUrl instanceof URL ? baseUrl : new URL(baseUrl);
-
   const basePath = url.pathname.replace(/\/+$/, "");
   const normalizedPath = path.replace(/^\/+/, "");
-
   const newPathname = `${basePath}/${normalizedPath}`;
-
   return new URL(newPathname, baseUrl);
 }
 
@@ -106,7 +96,6 @@ function joinPathname(path: Pathname, baseUrl: string | URL): URL {
  * @param {Enhancer} [enhancer] - An optional enhancer if you have a base url.
  * @returns {Methods | CustomFetch} A custom fetch function that applies the enhancer, if provided.
  */
-
 export function pretch(baseUrl: string | URL, enhancer?: Enhancer): Methods;
 
 export function pretch(enhancer: Enhancer): CustomFetch;
@@ -117,7 +106,6 @@ export function pretch(
 ): Methods | CustomFetch {
   let innerFetch: Handler = (request) => fetch(request);
   let baseUrl: string | URL | undefined;
-
   if (typeof optionsOrBaseUrl === "string" || optionsOrBaseUrl instanceof URL) {
     baseUrl = optionsOrBaseUrl;
     if (enhancer) {
@@ -136,11 +124,9 @@ export function pretch(
         ),
       ),
     );
-
   if (typeof optionsOrBaseUrl === "function") {
     return call;
   }
-
   return {
     get: (url = "/", options) => call(url, { ...options, method: "GET" }),
     post: (url = "/", options) => call(url, { ...options, method: "POST" }),
