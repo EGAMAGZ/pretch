@@ -41,7 +41,7 @@ Check the [Documentation](https://jsr.io/@pretch) in JSR
 ### Core (Vanilla Javascript) - @pretch/core
 
 In the nexts examples, fetch is enhaced with a middleware that will be
-automatically add default headers to every request
+automatically add default headers to every request:
 
 Create a custom fetch with behaviour enhaced through middleware and a base URL
 
