@@ -177,7 +177,7 @@
  * );
  * ```
  *
- * @module
+ * @module pretch
  */
 
 export * from "@/types.ts";
