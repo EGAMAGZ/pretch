@@ -106,7 +106,7 @@ export function pretch(baseUrl: string | URL, enhancer?: Enhancer): Methods;
  * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows adding a list of middleware functions
  * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
  * {@link retry}, {@link jwt}, and {@link defaultHeaders}.
- * 
+ *
  * @param {Enhancer} [enhancer] - An optional enhancer to modify fetch behavior.
  * @returns {CustomFetch} A custom fetch function with the enhancer applied.
  */
