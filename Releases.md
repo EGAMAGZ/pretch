@@ -1,3 +1,18 @@
+### 2025.02.17
+
+#### @pretch/core 1.1.1 (patch)
+
+- style(core): Code formatted
+- refactor(core): update module annotations and improve documentation clarity
+
+#### @pretch/preact 0.1.11 (patch)
+
+- docs(*): Updated README.md
+
+#### @pretch/react 0.0.10 (patch)
+
+- docs(*): Updated README.md
+
 ### 2025.01.28
 
 #### @pretch/core 1.1.0 (minor)
