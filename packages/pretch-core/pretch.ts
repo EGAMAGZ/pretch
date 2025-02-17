@@ -22,17 +22,17 @@ function joinPathname(path: Pathname, baseUrl: string | URL): URL {
 }
 
 /**
- * Creates a custom fetch function with optional enhancement. This enhancement changes the default fetch function's behaviour
- * without directly modifying the global fetch. The custom fetch function returned can be used just like the standard fetch but
- * with the behaviour defined by the configured enhancer. The custom fetch can be reused for multiple requests. Each request will
+ * Creates a collection of HTTP method functions for making requests. This enhancement changes the default fetch function's behaviour
+ * without directly modifying the global fetch. The method functions returned can be used just like the standard fetch but
+ * with the behaviour defined by the configured enhancer. The method functions can be reused for multiple requests. Each request will
  * apply the same enhancer behavior.
  *
- * In the nexts examples, fetch is enhaced with a middleware that will be automatically add default headers to every request
+ * In the following example, fetch is enhanced with middleware that will automatically add default headers to every request.
  *
- * @example Create a custom fetch with behaviour enhaced through middleware and a base URL
+ * @example Create a collection of method functions with behaviour enhanced through middleware and a base URL
  * ```ts
  * import pretch from "@pretch/core";
- * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
+ * import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
  *
  * const customFetch = pretch(
  *   "https://jsonplaceholder.typicode.com/todos/",
@@ -51,29 +51,44 @@ function joinPathname(path: Pathname, baseUrl: string | URL): URL {
  * const createdTodo = await getResponse.json();
  *
  * // The following request will keep the enhanced behaviour of adding default headers
- * const putResponse = await customFetch.put("/1",{
- * 	body: JSON.stringify({
- * 			title: "Updated todo",
- * 			body: "Same task",
- * 			userId: 1,
- * 		}),
- * 	},
- * );
+ * const putResponse = await customFetch.put("/1", {
+ *   body: JSON.stringify({
+ *     title: "Updated todo",
+ *     body: "Same task",
+ *     userId: 1,
+ *   }),
+ * });
  *
  * const todoUpdated = await putResponse.json();
  * ```
  *
- * @example Create a custom fetch with behaviour enhaced through middleware to query different urls
+ * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows adding a list of middleware functions
+ * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
+ * {@link retry}, {@link jwt}, and {@link defaultHeaders}.
+ *
+ * @param {string | URL} baseUrl - The base URL to use for requests with this Pretch.
+ * @param {Enhancer} enhancer - An optional enhancer to modify the fetch behavior.
+ * @returns {Methods} A collection of HTTP method functions for making requests with the enhancer applied.
+ */
+export function pretch(baseUrl: string | URL, enhancer?: Enhancer): Methods;
+
+/**
+ * Creates a custom fetch function with optional enhancement. This function changes the default fetch behavior
+ * without modifying the global fetch. The returned custom fetch works like the standard fetch but applies
+ * the behavior defined by the configured enhancer. It can be reused for multiple requests, and each request will
+ * apply the same enhancer behavior.
+ *
+ * @example Create a custom fetch with behavior enhanced through middleware to query different URLs:
  * ```ts
  * import pretch from "@pretch/core";
- * import { applyMiddleware, defaultHeaders} from "@pretch/core/middleware";
+ * import { applyMiddleware, defaultHeaders } from "@pretch/core/middleware";
  *
  * const customFetch = pretch(
  *   applyMiddleware(
  *     defaultHeaders({
- *         "Content-Type": "application/json; charset=UTF-8",
- *       },
- *      {
+ *       "Content-Type": "application/json; charset=UTF-8",
+ *     },
+ *     {
  *       strategy: "append",
  *     }),
  *   ),
@@ -83,20 +98,18 @@ function joinPathname(path: Pathname, baseUrl: string | URL): URL {
  *
  * const todo = await firstResponse.json();
  *
- * const secondResponse = await customFetch("https://otherexample.com/api/auth/sing-in");
+ * const secondResponse = await customFetch("https://otherexample.com/api/auth/sign-in");
  *
  * const user = await secondResponse.json();
  * ```
  *
- * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows to add a list of middleware functions
+ * **Note**: Pretch provides the built-in enhancer {@link applyMiddleware}, which allows adding a list of middleware functions
  * for handling request modification or defaults, and a couple of built-in middleware which are: {@link validateStatus},
- * {@link retry}, {@link jwt} and {@link defaultHeaders}
+ * {@link retry}, {@link jwt}, and {@link defaultHeaders}.
  *
- * @param {string | URL | Enhancer} [baseUrl] - Either a function to enhance the fetch behavior, the base url to use for requests with this Pretch.
- * @param {Enhancer} [enhancer] - An optional enhancer if you have a base url.
- * @returns {Methods | CustomFetch} A custom fetch function that applies the enhancer, if provided.
+ * @param {Enhancer} [enhancer] - An optional enhancer to modify fetch behavior.
+ * @returns {CustomFetch} A custom fetch function with the enhancer applied.
  */
-export function pretch(baseUrl: string | URL, enhancer?: Enhancer): Methods;
 
 export function pretch(enhancer: Enhancer): CustomFetch;
 

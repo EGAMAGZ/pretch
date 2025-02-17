@@ -44,9 +44,10 @@
  * );
  * ```
  *
- * @module
+ * @module middleware
  */
-export * from "./apply_middleware.ts";
+
+export * from "@/middleware/apply_middleware.ts";
 export * from "@/middleware/authorization.ts";
 export * from "@/middleware/default_headers.ts";
 export * from "@/middleware/validate_status.ts";
